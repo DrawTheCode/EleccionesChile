@@ -25,6 +25,10 @@
 *.log
 *.sql
 *.sqlite
+# Downloads files from servel FTP #
+###################################
+/src/config/data/*
+!/src/config/data/.gitkeep
 
 # OS generated files #
 ######################
@@ -40,3 +44,9 @@ Thumbs.db
 ################
 node_modules
 package-lock.json
+/build
+
+# Enviroment variable #
+#######################
+.env
+

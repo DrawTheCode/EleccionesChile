@@ -14,9 +14,36 @@ export interface candidateSchema {
   COD_GENERO:string | null
 }
 
+export interface electionsSchema {
+  COD_ELEC: number
+  GLOSA_ELEC:string
+  ELE_FECHA:string
+  TIPO_ZONA:string
+  TIPO_ELECCION:string
+  TOTAL_ELECTORES:number
+}
+
 interface basicZone {
   COD_ZONA:number
   TIPO_ZONA:string
+}
+
+export interface pactSchema {
+  COD_PACTO: number
+  LETRA_PACTO:string
+  GLOSA_PACTO:string
+}
+
+export interface partiesSchema {
+  COD_PART: number
+  GLOSA_PART: string
+  SIGLA_PART: string
+}
+
+export interface subPactSchema {
+  COD_SUBP: number
+  LETRA_PACTO:string
+  GLOSA_SUBP:string
 }
 
 export interface ZoneSchema extends basicZone{
@@ -34,4 +61,17 @@ export interface voteSchema extends basicZone{
   AMBITO: number
   COD_AMBITO: number
   VOTOS:number
+}
+
+export interface fileShcemas {
+  name: string
+  id: number
+  version: number
+  correlative:number
+}
+export interface fileResultsShcemas {
+  name: string
+  id: number
+  percent: number
+  hour:string
 }
