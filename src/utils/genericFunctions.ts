@@ -37,8 +37,8 @@ export function makeFileShcema(nameFile:string, filter:string): fileShcemas | nu
   const firstFilter = new RegExp(`Escenario_${filter}_`);
   if(nameFile.match(firstFilter)){
     const firstCut = nameFile.split(firstFilter);
-    if(firstCut[1].match(/.txt$/)!==null){
-      const secondCut = firstCut[1].split(/.txt$/);
+    if(firstCut[1].match(/.(txt|TXT)$/)!==null){
+      const secondCut = firstCut[1].split(/.(txt|TXT)$/);
       return {  
         name: nameFile,
         id: secondCut[0] as unknown as number,
@@ -54,8 +54,8 @@ export function makeFileResultShcema(nameFile:string): fileResultsShcemas | null
   const firstFilter = new RegExp(`VOTACION_8_`);
   if(nameFile.match(firstFilter)){
     const firstCut = nameFile.split(firstFilter);
-    if(firstCut[1].match(/.txt$/)!==null){
-      const secondCut = firstCut[1].split(/.txt$/);
+    if(firstCut[1].match(/.(txt|TXT)$/)!==null){
+      const secondCut = firstCut[1].split(/.(txt|TXT)$/);
       const thirdCut = secondCut[0].split(/_/);
       return {  
         name: nameFile,

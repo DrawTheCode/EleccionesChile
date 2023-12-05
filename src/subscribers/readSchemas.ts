@@ -81,7 +81,49 @@ const getScenarySchema = async (filter:string) => {
   return null;
 }
 
-export const getResultsSchema = async () => {
+export const getResultOneFilter = async (key:string,value:string|number) => {
+  key = key.toUpperCase();
+  const listKey = ['COD_ELEC','AMBITO','COD_AMBITO','COD_ZONA','TIPO_ZONA','VOTOS'];
+  const tempValue = key!=='TIPO_ZONA' ? value as number : value as string;
+  if(listKey.includes(key)){
+    const result = await getResultsSchema();
+    if(result && result?.data!==null){
+      const resultList = result.data.filter((item:any)=> {
+        return item[key]===tempValue;
+      });
+      return {details:result.details,data:resultList}
+    }
+  }
+  return null;
+}
+
+export const getResultTwoFilter = async (firstKey:string,firstValue:string|number,secondKey:string,secondValue:string|number) => {
+  firstKey = firstKey.toUpperCase();
+  secondKey =secondKey.toUpperCase();
+  const listKey = ['COD_ELEC','AMBITO','COD_AMBITO','COD_ZONA','TIPO_ZONA','VOTOS'];
+  const tempFirstValue = firstKey!=='TIPO_ZONA' ? firstValue as number : (firstValue as string).toUpperCase();
+  const tempSecondValue = secondKey!=='TIPO_ZONA' ? secondValue as number : (secondValue as string).toUpperCase();
+  if(listKey.includes(firstKey) && listKey.includes(secondKey)){
+    const result = await getResultsSchema();
+    if(result && result?.data!==null){
+      if(firstKey==='COD_ZONA' && secondKey==='TIPO_ZONA'){
+        const tempResultZone = await getZoneInfo('zonas');
+        if(tempResultZone.length>0){
+          result.details.zone_details = tempResultZone.filter((item:any)=>{
+            return(item[firstKey]===tempFirstValue && item[secondKey] === tempSecondValue);
+          });
+        }
+      }
+      const resultList = result.data.filter((item:any)=> {
+        return(item[firstKey]===tempFirstValue && item[secondKey] === tempSecondValue);
+      });
+      return {details:result.details,data:resultList}
+    }
+  }
+  return null;
+}
+
+export const getResultsSchema = async ()  => {
   const tempResult = await filterResultsFile();
   if(tempResult.length>0 && localPath){
     const details = tempResult[0];
@@ -125,4 +167,25 @@ export const getZoneInfo = async (filter:string) => {
     })
   }
   return tempReturn;
+}
+
+export const getZoneInfoFilterByType = async (filter:string,type:string) => {
+  filter = makeFileInputCamelCase(filter);
+  const result = await getScenarySchema(filter);
+  const tempReturn: any = []
+  if(result && result.length>0){
+    const listOfLines = result.split(/;(\r\n|\r|\n)/);
+    listOfLines.forEach(line => {
+      if(line && line.match(/;/)){
+        const reconstructorElement = makeCurrentSchema(line,filter);
+        if(reconstructorElement){
+          tempReturn.push(reconstructorElement);
+        }
+      }
+    })
+  }
+  const finalResult = tempReturn.filter((item: ZoneSchema)=>{
+    return(item['TIPO_ZONA']===type.toLocaleUpperCase());
+  });
+  return finalResult;
 }

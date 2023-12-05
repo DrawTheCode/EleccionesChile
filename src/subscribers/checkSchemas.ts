@@ -45,7 +45,7 @@ export async function decompressFiles(){
     let localData = await readLocalData(localPath);
     if(localData.length>0){
       const onlyZipList = localData.filter((zipFileName) =>{ 
-        return zipFileName.match(/\.zip$/)!==null
+        return zipFileName.match(/\.(zip|ZIP)$/)!==null
       });
       onlyZipList.forEach((zip)=>{
         const unzipPathAndName = unzipPath+'/'+zip;
@@ -91,7 +91,7 @@ export async function filterSchemasFile(filter:string):Promise <fileShcemas[]>{
   let results : fileShcemas[] = [];
   filter = makeFileInputCamelCase(filter);
   if(localPath){
-    const regularExp  = new RegExp(`Escenario_${filter}_[0-9]{6}.txt$`);
+    const regularExp  = new RegExp(`Escenario_${filter}_[0-9]{6}.(txt|TXT)$`);
     const localData = await readLocalData(localPath);
     const validateNames = localData.filter(item=>{
       return item.match(regularExp)!==null;
@@ -114,7 +114,7 @@ export async function filterSchemasFile(filter:string):Promise <fileShcemas[]>{
 export async function filterResultsFile():Promise <fileResultsShcemas[]>{
   let results : fileResultsShcemas[] = [];
   if(localPath){
-    const regularExp  = new RegExp(`VOTACION_8_[0-9]{5}_[0-9]{4}.txt$`);
+    const regularExp  = new RegExp(`VOTACION_8_[0-9]{5}_[0-9]{4}.(txt|TXT)$`);
     const localData = await readLocalData(`${localPath}unzip/`);
     const validateNames = localData.filter(item=>{
       return item.match(regularExp)!==null;

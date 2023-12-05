@@ -74,4 +74,5 @@ export interface fileResultsShcemas {
   id: number
   percent: number
   hour:string
+  zone_details?: any
 }
