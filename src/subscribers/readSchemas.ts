@@ -203,9 +203,11 @@ export const getSearchByTypeSchema = async ()  => {
           if(data[tempName]===undefined){
             data[tempName]=[];
           }
-          data[tempName].push(
+          if(data[tempName][currentElement.COD_ZONA]===undefined){
+            data[tempName][currentElement.COD_ZONA] = [];
+          }
+          data[tempName][currentElement.COD_ZONA].push(
             {
-              COD_ZONA:currentElement.COD_ZONA,
               AMBITO:currentElement.AMBITO,
               COD_AMBITO:currentElement.COD_AMBITO,
               VOTOS:currentElement.VOTOS
@@ -275,6 +277,17 @@ export const getSearchByType = async (key:string) => {
     const result = await getSearchByTypeSchema();
     if(result && result?.data!==null){
       return {details:result.details,data:result.data[key]}
+    }
+  }
+  return null;
+}
+
+export const getSearchByTypeAndID = async (key:string,Id:string) => {
+  key = key.toUpperCase();
+  if(key.match(/^(G|P|R|Q|S|D|V|C|E|I|N|U|L)$/)!==null){
+    const result = await getSearchByTypeSchema();
+    if(result && result?.data!==null){
+      return {details:result.details,data:result.data[key][Id]}
     }
   }
   return null;

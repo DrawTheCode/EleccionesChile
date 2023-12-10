@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import { configDotenv } from "dotenv";
 import { zoneList } from "../config/zoneTypes";
 import { checkNotCopyFiles, filterSchemasFile, getFileList } from "../subscribers/checkSchemas";
-import { getResultOneFilter, getResultTwoFilter, getResultsSchema, getSearch, getZoneInfo, getZoneInfoFilterByType } from "../subscribers/readSchemas";
+import { getResultOneFilter, getResultTwoFilter, getResultsSchema, getSearch, getSearchByType, getSearchByTypeAndID, getZoneInfo, getZoneInfoFilterByType } from "../subscribers/readSchemas";
 import { election } from "../config/electionsTypes";
 import { ambit } from "../config/ambitTypes";
 
@@ -87,7 +87,12 @@ search.get('/by/:complexId',async (req,res) => {
   res.send(await getSearch(req.params.complexId));
 });
 
-search.get('/by/type/:id',async (req,res) => {
+search.get('/by/type/:typeZone',async (req,res) => {
   corsDefinitions(req,res);
-  res.send(await getSearch(req.params.id));
+  res.send(await getSearchByType(req.params.typeZone));
+});
+
+search.get('/by/type/:typeZone/:idZone',async (req,res) => {
+  corsDefinitions(req,res);
+  res.send(await getSearchByTypeAndID(req.params.typeZone,req.params.idZone));
 });
