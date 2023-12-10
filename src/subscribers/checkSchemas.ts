@@ -55,7 +55,7 @@ export async function decompressFiles(){
             .then((_files)=>{
               console.log('Archivo descomprimido con exito');
             }).catch((error)=>{
-              console.log(JSON.stringify(error))
+              console.log('ERROR DE ZIPPEADO=>',JSON.stringify(error))
               writeFile(`${unzipPathAndName}.error`,JSON.stringify(error));
             });
           }

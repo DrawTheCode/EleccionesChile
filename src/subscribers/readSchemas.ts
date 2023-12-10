@@ -72,6 +72,17 @@ function makeCurrentSchema(listAtr:string,type:string): ZoneSchema | FatherZoneS
   }
 }
 
+function makeVoteSchema(reconstructorElement:string[]){
+  return {
+    COD_ELEC:  reconstructorElement[0],
+    AMBITO:    reconstructorElement[1],
+    COD_AMBITO:reconstructorElement[2],
+    COD_ZONA:  reconstructorElement[3],
+    TIPO_ZONA: reconstructorElement[4],
+    VOTOS:     reconstructorElement[5]
+  }
+}
+
 
 const getScenarySchema = async (filter:string) => {
   const tempResult = await filterSchemasFile(makeFileInputCamelCase(filter));
@@ -81,10 +92,11 @@ const getScenarySchema = async (filter:string) => {
   return null;
 }
 
+
 export const getResultOneFilter = async (key:string,value:string|number) => {
   key = key.toUpperCase();
   const listKey = ['COD_ELEC','AMBITO','COD_AMBITO','COD_ZONA','TIPO_ZONA','VOTOS'];
-  const tempValue = key!=='TIPO_ZONA' ? value as number : value as string;
+  const tempValue = key!=='TIPO_ZONA' ? value as number : (value as string).toUpperCase();
   if(listKey.includes(key)){
     const result = await getResultsSchema();
     if(result && result?.data!==null){
@@ -134,15 +146,71 @@ export const getResultsSchema = async ()  => {
       if(line && line.match(/;/)){
         const reconstructorElement = line.split(';');
         if(reconstructorElement.length===6){
-          const currentElement = {
-            COD_ELEC:  reconstructorElement[0],
-            AMBITO:    reconstructorElement[1],
-            COD_AMBITO:reconstructorElement[2],
-            COD_ZONA:  reconstructorElement[3],
-            TIPO_ZONA: reconstructorElement[4],
-            VOTOS:     reconstructorElement[5]
-          }
+          const currentElement = makeVoteSchema(reconstructorElement);
           data.push(currentElement);
+        }
+      }
+    })
+    return {details,data}
+  }
+  return null;
+}
+
+export const getSearchSchema = async ()  => {
+  const tempResult = await filterResultsFile();
+  if(tempResult.length>0 && localPath){
+    const details = tempResult[0];
+    const result = await readFileSync(`${localPath}unzip/${tempResult[0].name}`,{ encoding: 'utf8' });
+    const listOfLines = result.split(/;(\r\n|\r|\n)/);
+    const data:any = [];
+    listOfLines.forEach(line => {
+      if(line && line.match(/;/)){
+        const reconstructorElement = line.split(';');
+        if(reconstructorElement.length===6){
+          const currentElement = makeVoteSchema(reconstructorElement);
+          const tempName = `${currentElement.COD_ZONA}${currentElement.TIPO_ZONA}`;
+          if(data[tempName]===undefined){
+            data[tempName] = []
+          }
+          data[tempName].push(
+            {
+              AMBITO:currentElement.AMBITO,
+              COD_AMBITO:currentElement.COD_AMBITO,
+              VOTOS:currentElement.VOTOS
+            }
+          );
+        }
+      }
+    })
+    return {details,data}
+  }
+  return null;
+}
+
+export const getSearchByTypeSchema = async ()  => {
+  const tempResult = await filterResultsFile();
+  if(tempResult.length>0 && localPath){
+    const details = tempResult[0];
+    const result = await readFileSync(`${localPath}unzip/${tempResult[0].name}`,{ encoding: 'utf8' });
+    const listOfLines = result.split(/;(\r\n|\r|\n)/);
+    const data:any = [];
+    listOfLines.forEach(line => {
+      if(line && line.match(/;/)){
+        const reconstructorElement = line.split(';');
+        if(reconstructorElement.length===6){
+          const currentElement = makeVoteSchema(reconstructorElement);
+          const tempName = `${currentElement.TIPO_ZONA}`;
+          if(data[tempName]===undefined){
+            data[tempName]=[];
+          }
+          data[tempName].push(
+            {
+              COD_ZONA:currentElement.COD_ZONA,
+              AMBITO:currentElement.AMBITO,
+              COD_AMBITO:currentElement.COD_AMBITO,
+              VOTOS:currentElement.VOTOS
+            }
+          );
         }
       }
     })
@@ -188,4 +256,26 @@ export const getZoneInfoFilterByType = async (filter:string,type:string) => {
     return(item['TIPO_ZONA']===type.toLocaleUpperCase());
   });
   return finalResult;
+}
+
+export const getSearch = async (key:string) => {
+  key = key.toUpperCase();
+  if(key.match(/.*(G|P|R|Q|S|D|V|C|E|I|N|U|L)$/)!==null){
+    const result = await getSearchSchema();
+    if(result && result?.data!==null){
+      return {details:result.details,data:result.data[key]}
+    }
+  }
+  return null;
+}
+
+export const getSearchByType = async (key:string) => {
+  key = key.toUpperCase();
+  if(key.match(/^(G|P|R|Q|S|D|V|C|E|I|N|U|L)$/)!==null){
+    const result = await getSearchByTypeSchema();
+    if(result && result?.data!==null){
+      return {details:result.details,data:result.data[key]}
+    }
+  }
+  return null;
 }

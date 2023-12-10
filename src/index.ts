@@ -1,6 +1,6 @@
 import express from "express";
 import { configDotenv } from "dotenv";
-import { listing, results, zoneDefinitions } from "./api/listElements";
+import { listing, results, search, zoneDefinitions } from "./api/listElements";
 import cron from 'node-cron';
 import { copyFilesLocal, decompressFiles } from "./subscribers/checkSchemas";
 
@@ -25,3 +25,4 @@ cron.schedule("*/30 * * * * *", function () {
 plebiscitoReader.use('/api/def/',zoneDefinitions);
 plebiscitoReader.use('/api/check/',listing);
 plebiscitoReader.use('/api/result/',results);
+plebiscitoReader.use('/api/search/',search);

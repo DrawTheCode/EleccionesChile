@@ -41,4 +41,4 @@ export const zoneList : zone[] = [
     id:"L" , 
     value: "Local Votación" 
   }
-]; 
+];  

@@ -56,11 +56,14 @@ export interface FatherZoneSchema  extends basicZone{
   TIPO_ZONA_PAD: string
 }
 
-export interface voteSchema extends basicZone{
-  COD_ELEC: number
+export interface simpleVote {
   AMBITO: number
   COD_AMBITO: number
   VOTOS:number
+}
+
+export interface voteSchema extends simpleVote, basicZone{
+  COD_ELEC: number
 }
 
 export interface fileShcemas {

@@ -2,22 +2,27 @@ import express, { Request, Response } from "express";
 import { configDotenv } from "dotenv";
 import { zoneList } from "../config/zoneTypes";
 import { checkNotCopyFiles, filterSchemasFile, getFileList } from "../subscribers/checkSchemas";
-import { getResultOneFilter, getResultTwoFilter, getResultsSchema, getZoneInfo, getZoneInfoFilterByType } from "../subscribers/readSchemas";
+import { getResultOneFilter, getResultTwoFilter, getResultsSchema, getSearch, getZoneInfo, getZoneInfoFilterByType } from "../subscribers/readSchemas";
 import { election } from "../config/electionsTypes";
 import { ambit } from "../config/ambitTypes";
 
 export const zoneDefinitions = express.Router();
 export const listing = express.Router();
 export const results = express.Router();
+export const search = express.Router();
 
 configDotenv();
 const accessCORS = process.env.CORS !== undefined ? process.env.CORS.split(',') : null;
 
 function corsDefinitions(req:Request,res:Response){
-  const origin = req.header('origin');
-  const existInList = accessCORS && origin ? accessCORS.includes(origin):false;
-  if(!origin || existInList){
-    res.header("Access-Control-Allow-Origin",origin)
+  let origin = req.header('referer');
+  console.log('REQUEST=>',origin);
+  if(typeof origin === 'string' && origin.match(/\/$/)!==null){
+    origin = origin.replace(/\/$/,'');
+  }
+  if(origin && accessCORS && accessCORS.includes(origin)){
+    res.header('Access-Control-Allow-Origin',origin);
+    res.header('Access-Control-Allow-Methods','GET,POST,PUT,PATCH,DELETE');
   }
 }
 
@@ -37,7 +42,6 @@ zoneDefinitions.get('/ambit', (req,res )=>{
 listing.get('/files',async (req,res)=>{
   if(process.env.FTP_PATH){
     corsDefinitions(req,res);
-    console.log('aca vamos=>',process.env.FTP_PATH);
     res.send(await getFileList(process.env.FTP_PATH));
   }
   return {error:'No hay ruta setteada en el sistema.'}
@@ -76,4 +80,14 @@ results.get('/filter/:key/:value',async (req,res) => {
 results.get('/filter/:firstKey/:firstValue/:secondKey/:secondValue',async (req,res) => {
   corsDefinitions(req,res);
   res.send(await getResultTwoFilter(req.params.firstKey,req.params.firstValue,req.params.secondKey,req.params.secondValue));
+});
+
+search.get('/by/:complexId',async (req,res) => {
+  corsDefinitions(req,res);
+  res.send(await getSearch(req.params.complexId));
+});
+
+search.get('/by/type/:id',async (req,res) => {
+  corsDefinitions(req,res);
+  res.send(await getSearch(req.params.id));
 });
