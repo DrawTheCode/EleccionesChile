@@ -189,24 +189,26 @@ export const getSearchSchema = async ()  => {
 
 export const getSearchByTypeSchema = async ()  => {
   const tempResult = await filterResultsFile();
-  if(tempResult.length>0 && localPath){
-    const details = tempResult[0];
+  if(await tempResult.length>0 && localPath){
+    const details = await tempResult[0];
     const result = await readFileSync(`${localPath}unzip/${tempResult[0].name}`,{ encoding: 'utf8' });
-    const listOfLines = result.split(/;(\r\n|\r|\n)/);
-    const data:any = [];
-    listOfLines.forEach(line => {
+    const listOfLines = await result.split(/;(\r\n|\r|\n)/);
+    let data:any = [];
+    await listOfLines.forEach(line => {
       if(line && line.match(/;/)){
         const reconstructorElement = line.split(';');
         if(reconstructorElement.length===6){
           const currentElement = makeVoteSchema(reconstructorElement);
           const tempName = `${currentElement.TIPO_ZONA}`;
+          const tempIdZone = `${currentElement.COD_ZONA}`;
           if(data[tempName]===undefined){
-            data[tempName]=[];
+            data[tempName] = [];
           }
-          if(data[tempName][currentElement.COD_ZONA]===undefined){
-            data[tempName][currentElement.COD_ZONA] = [];
+          if(data[tempName][tempIdZone]===undefined){
+            //console.log('no existe =>',`data[${tempName}][${tempIdZone}]`);
+            data[tempName][tempIdZone] = [];
           }
-          data[tempName][currentElement.COD_ZONA].push(
+          data[tempName][tempIdZone].push(
             {
               AMBITO:currentElement.AMBITO,
               COD_AMBITO:currentElement.COD_AMBITO,
@@ -216,7 +218,7 @@ export const getSearchByTypeSchema = async ()  => {
         }
       }
     })
-    return {details,data}
+    return await({details,data});
   }
   return null;
 }
@@ -275,8 +277,12 @@ export const getSearchByType = async (key:string) => {
   key = key.toUpperCase();
   if(key.match(/^(G|P|R|Q|S|D|V|C|E|I|N|U|L)$/)!==null){
     const result = await getSearchByTypeSchema();
-    if(result && result?.data!==null){
-      return {details:result.details,data:result.data[key]}
+    if(result && result?.data!==null && result?.data[key]){
+      //console.log(key,'===>',result?.data[key]);
+      return({
+        details: result.details,
+        data: {...result.data[key]}
+      });
     }
   }
   return null;
@@ -285,9 +291,9 @@ export const getSearchByType = async (key:string) => {
 export const getSearchByTypeAndID = async (key:string,Id:string) => {
   key = key.toUpperCase();
   if(key.match(/^(G|P|R|Q|S|D|V|C|E|I|N|U|L)$/)!==null){
-    const result = await getSearchByTypeSchema();
-    if(result && result?.data!==null){
-      return {details:result.details,data:result.data[key][Id]}
+    let result = await getSearchByTypeSchema();
+    if(await result!==null && result?.data!==null){
+      return {details:result?.details,data: result?.data[key][Id]}
     }
   }
   return null;

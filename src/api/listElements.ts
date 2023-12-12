@@ -16,7 +16,6 @@ const accessCORS = process.env.CORS !== undefined ? process.env.CORS.split(',') 
 
 function corsDefinitions(req:Request,res:Response){
   let origin = req.header('referer');
-  console.log('REQUEST=>',origin);
   if(typeof origin === 'string' && origin.match(/\/$/)!==null){
     origin = origin.replace(/\/$/,'');
   }
@@ -89,7 +88,9 @@ search.get('/by/:complexId',async (req,res) => {
 
 search.get('/by/type/:typeZone',async (req,res) => {
   corsDefinitions(req,res);
-  res.send(await getSearchByType(req.params.typeZone));
+  const result = JSON.stringify(await getSearchByType(req.params.typeZone));
+  //console.log('RESULT=>',await result);
+  res.send(await result);
 });
 
 search.get('/by/type/:typeZone/:idZone',async (req,res) => {
