@@ -83,7 +83,8 @@ Trae toda la data de los últimos resultados enviados desde el SERVEL.
 
 #### /api/result/filter/:key/:value
 ----
-[!Este filtro puede traer elementos no deseados, ejemplo un local de votación podría tener el mismo COD_ZONA que un país.]
+>[!CAUTION]
+>Este filtro puede traer elementos no deseados (cosa que sucedio en entrega de datos anteriores), ejemplo un local de votación podría tener el mismo COD_ZONA que un país.
 
 Trae los datos filtrando por los valores ingresados en la URL, el valor *:key* 
 corresponde al campo por el cual se quiere filtrar y el *:value* al valor de dicho campo.
