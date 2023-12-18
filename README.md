@@ -11,6 +11,7 @@ Requerimientos:
     "dev": Hace funcionar el proyecto en modo desarrollo (necesita archivo .env).
     "tsc": Hace la compilación del proyecto.
     "nohup": Hace correr el proyecto en segundo plano.
+    "cron": Revisa y compara los FTP copiando los archivos.
 
 ## .ENV
 ----
