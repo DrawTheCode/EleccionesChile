@@ -7,7 +7,7 @@ configDotenv();
 
 export function makeFolderIfNotExist(dir:string){
   if (!fs.existsSync(dir)){
-    fs.mkdirSync(dir);
+    fs.mkdirSync(dir,{recursive:true,mode:777});
   }
 }
 
@@ -95,10 +95,7 @@ export async function makeAErrorLogFile(path:string,nameFile:string,error:string
 }
 
 export function dataDisplay(){
-  const displayFolder= process.env.ENV === 'dev' ? 'src/' : 'build/';
-  const configFolder = 'config/';
   const dataFolder = 'data/';
-  makeFolderIfNotExist(displayFolder+configFolder);
-  makeFolderIfNotExist(displayFolder+configFolder+dataFolder);
-  return displayFolder+configFolder+dataFolder;
+  makeFolderIfNotExist(dataFolder);
+  return dataFolder;
 };

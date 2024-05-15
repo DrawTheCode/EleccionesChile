@@ -1,0 +1,2 @@
+# min hour day month weekday command
+* * * * * ts-node -e 'require("/home/app/src/subscribers/checkFTP.ts").check("/home/app/");' >> /data/logs/cron.log 2>&1

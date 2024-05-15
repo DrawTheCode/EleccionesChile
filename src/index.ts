@@ -10,7 +10,7 @@ configDotenv();
 const PORT = process.env.PORT ?? '3333';
 
 plebiscitoReader.listen(PORT, () => {
-  console.log(`app running on port => ${PORT} 🚀`)
+  console.log(`app running on port => ${PORT} 💣`)
 });
 
 plebiscitoReader.use('/api/def/',zoneDefinitions);

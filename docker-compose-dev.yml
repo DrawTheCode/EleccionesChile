@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  elecciones:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    env_file:
+      - .env
+    ports:
+      - "3050:3050"
+    volumes:
+      - ./:/home/app
+    command: "/usr/sbin/crond -f -l 0 -c /home/app/src/utils/crontab/ -L /data/logs/cron.log"
+volumes:
+  elecciones-data:

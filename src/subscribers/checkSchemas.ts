@@ -26,23 +26,26 @@ export const getFileList = async (path:string):Promise <string[]|null> => {
   return null;
 }
 
-export async function copyFilesLocal(){
+export async function copyFilesLocal(rootPath:string|false=false){
   if(process.env.FTP_PATH && localPath){
-    makeFolderIfNotExist(localPath);
+    const tempPath = (rootPath?rootPath:'')+localPath
+    makeFolderIfNotExist(tempPath);
     const listFilesToCopy = await checkNotCopyFiles();
     if(listFilesToCopy && listFilesToCopy.length>0){
       listFilesToCopy.forEach((item)=>{
-        ftpCopyFile(process.env.FTP_PATH+item , localPath+item);
+        console.log("Se a copiado el archivo en ==> ",tempPath+item);
+        ftpCopyFile(process.env.FTP_PATH+item , tempPath+item);
       });
     }
   }
 }
 
-export async function decompressFiles(){
+export async function decompressFiles(rootPath:string|false=false){
   if(localPath){
-    const unzipPath = `${localPath}unzip`;
+    const tempPath = (rootPath?rootPath:'')+localPath
+    const unzipPath = `${tempPath}unzip`;
     makeFolderIfNotExist(unzipPath);
-    let localData = await readLocalData(localPath);
+    let localData = await readLocalData(tempPath);
     if(localData.length>0){
       const onlyZipList = localData.filter((zipFileName) =>{ 
         return zipFileName.match(/\.(zip|ZIP)$/)!==null
@@ -51,7 +54,7 @@ export async function decompressFiles(){
         const unzipPathAndName = unzipPath+'/'+zip;
         const file = unzipPathAndName.substring(0,unzipPathAndName.length - 4);
           if(!fs.existsSync(file) && !fs.existsSync(unzipPathAndName+'.error')){
-            decompress(`${localPath}${zip}`,unzipPath)
+            decompress(`${tempPath}${zip}`,unzipPath)
             .then((_files)=>{
               console.log('Archivo descomprimido con exito');
             }).catch((error)=>{

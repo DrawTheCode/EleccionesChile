@@ -1,0 +1,6 @@
+FROM node:18-alpine3.18
+RUN npm i -g ts-node ts-node-dev
+RUN mkdir -p /home/app
+EXPOSE 3050
+WORKDIR /home/app
+CMD ["ts-node-dev","src/index.ts"]

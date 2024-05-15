@@ -27,8 +27,9 @@
 *.sqlite
 # Downloads files from servel FTP #
 ###################################
-/src/config/data/*
-!/src/config/data/.gitkeep
+/data/*
+!/data/.gitkeep
+!/data/unzip/.gitkeep
 
 # OS generated files #
 ######################

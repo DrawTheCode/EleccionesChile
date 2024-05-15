@@ -7,6 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node build/index.js",
     "dev": "ts-node-dev src/index.ts",
+    "docker-dev": "docker compose -f docker-compose-dev.yml up",
+    "docker-dev-clear": "docker compose -f docker-compose-dev.yml down",
+    "cron-dev": "ts-node -e 'require(\"./src/subscribers/checkFTP.ts\").check();'",
     "tsc": "tsc",
     "nohup": "nohup node build/index.js 0</dev/null 1>/dev/null 2>/dev/null &",
     "cron": "node -e 'require(\"./build/subscribers/checkFTP.js\").check()'"
