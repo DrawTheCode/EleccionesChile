@@ -21,7 +21,7 @@ Los valores necesarios dentro del .env para correr el proyecto son:
 - FTP_PASS *clave de usuario FTP*
 - FTP_HOST *corresponde a la ip de la máquina FTP*
 - FTP_PATH *ruta de archivos en donde se alojarán dentro del FTP*
-- ENV *corresponde al entorno, si estas en local su valor debe ser "dev" *
+- NODE_ENV *corresponde al entorno, si estas en local su valor debe ser "develop" en producción debería ser "production"*
 - CORS *listado de dominios autorizados separados por comas*
 
 
