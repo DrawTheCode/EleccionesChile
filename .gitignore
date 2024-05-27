@@ -29,7 +29,12 @@
 ###################################
 /data/*
 !/data/.gitkeep
+!/data/unzip/
+/data/unzip/*
 !/data/unzip/.gitkeep
+!/data/logs/
+/data/logs/*
+!/data/logs/.gitkeep
 
 # OS generated files #
 ######################
