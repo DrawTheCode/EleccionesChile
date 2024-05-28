@@ -93,12 +93,12 @@ const getScenarySchema = async (filter:string) => {
 }
 
 
-export const getResultOneFilter = async (key:string,value:string|number) => {
+export const getResultOneFilter = async (key:string,value:string|number,elecID:number) => {
   key = key.toUpperCase();
   const listKey = ['COD_ELEC','AMBITO','COD_AMBITO','COD_ZONA','TIPO_ZONA','VOTOS'];
   const tempValue = key!=='TIPO_ZONA' ? value as number : (value as string).toUpperCase();
   if(listKey.includes(key)){
-    const result = await getResultsSchema();
+    const result = await getResultsSchema(elecID);
     if(result && result?.data!==null){
       const resultList = result.data.filter((item:any)=> {
         return item[key]===tempValue;
@@ -109,14 +109,14 @@ export const getResultOneFilter = async (key:string,value:string|number) => {
   return null;
 }
 
-export const getResultTwoFilter = async (firstKey:string,firstValue:string|number,secondKey:string,secondValue:string|number) => {
+export const getResultTwoFilter = async (elecID:number,firstKey:string,firstValue:string|number,secondKey:string,secondValue:string|number) => {
   firstKey = firstKey.toUpperCase();
   secondKey =secondKey.toUpperCase();
   const listKey = ['COD_ELEC','AMBITO','COD_AMBITO','COD_ZONA','TIPO_ZONA','VOTOS'];
   const tempFirstValue = firstKey!=='TIPO_ZONA' ? firstValue as number : (firstValue as string).toUpperCase();
   const tempSecondValue = secondKey!=='TIPO_ZONA' ? secondValue as number : (secondValue as string).toUpperCase();
   if(listKey.includes(firstKey) && listKey.includes(secondKey)){
-    const result = await getResultsSchema();
+    const result = await getResultsSchema(elecID);
     if(result && result?.data!==null){
       if(firstKey==='COD_ZONA' && secondKey==='TIPO_ZONA'){
         const tempResultZone = await getZoneInfo('zonas');
@@ -135,8 +135,8 @@ export const getResultTwoFilter = async (firstKey:string,firstValue:string|numbe
   return null;
 }
 
-export const getResultsSchema = async ()  => {
-  const tempResult = await filterResultsFile();
+export const getResultsSchema = async (elecID:number)  => {
+  const tempResult = await filterResultsFile(elecID);
   if(tempResult.length>0 && localPath){
     const details = tempResult[0];
     const result = await readFileSync(`${localPath}unzip/${tempResult[0].name}`,{ encoding: 'utf8' });
@@ -156,8 +156,8 @@ export const getResultsSchema = async ()  => {
   return null;
 }
 
-export const getSearchSchema = async ()  => {
-  const tempResult = await filterResultsFile();
+export const getSearchSchema = async (elecID:number)  => {
+  const tempResult = await filterResultsFile(elecID);
   if(tempResult.length>0 && localPath){
     const details = tempResult[0];
     const result = await readFileSync(`${localPath}unzip/${tempResult[0].name}`,{ encoding: 'utf8' });
@@ -187,8 +187,8 @@ export const getSearchSchema = async ()  => {
   return null;
 }
 
-export const getSearchByTypeSchema = async ()  => {
-  const tempResult = await filterResultsFile();
+export const getSearchByTypeSchema = async (elecID:number)  => {
+  const tempResult = await filterResultsFile(elecID);
   if(await tempResult.length>0 && localPath){
     const details = await tempResult[0];
     const result = await readFileSync(`${localPath}unzip/${tempResult[0].name}`,{ encoding: 'utf8' });
@@ -262,10 +262,10 @@ export const getZoneInfoFilterByType = async (filter:string,type:string) => {
   return finalResult;
 }
 
-export const getSearch = async (key:string) => {
+export const getSearch = async (key:string,elecID:number) => {
   key = key.toUpperCase();
   if(key.match(/.*(G|P|R|Q|S|D|V|C|E|I|N|U|L)$/)!==null){
-    const result = await getSearchSchema();
+    const result = await getSearchSchema(elecID);
     if(result && result?.data!==null){
       return {details:result.details,data:result.data[key]}
     }
@@ -273,10 +273,10 @@ export const getSearch = async (key:string) => {
   return null;
 }
 
-export const getSearchByType = async (key:string) => {
+export const getSearchByType = async (key:string,elecID:number) => {
   key = key.toUpperCase();
   if(key.match(/^(G|P|R|Q|S|D|V|C|E|I|N|U|L)$/)!==null){
-    const result = await getSearchByTypeSchema();
+    const result = await getSearchByTypeSchema(elecID);
     if(result && result?.data!==null && result?.data[key]){
       //console.log(key,'===>',result?.data[key]);
       return({
@@ -288,12 +288,12 @@ export const getSearchByType = async (key:string) => {
   return null;
 }
 
-export const getSearchByTypeAndID = async (key:string,Id:string) => {
+export const getSearchByTypeAndID = async (key:string,id:string,elecID:number) => {
   key = key.toUpperCase();
   if(key.match(/^(G|P|R|Q|S|D|V|C|E|I|N|U|L)$/)!==null){
-    let result = await getSearchByTypeSchema();
+    let result = await getSearchByTypeSchema(elecID);
     if(await result!==null && result?.data!==null){
-      return {details:result?.details,data: result?.data[key][Id]}
+      return {details:result?.details,data: result?.data[key][id]}
     }
   }
   return null;

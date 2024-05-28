@@ -114,17 +114,17 @@ export async function filterSchemasFile(filter:string):Promise <fileShcemas[]>{
   return results;
 }
 
-export async function filterResultsFile():Promise <fileResultsShcemas[]>{
+export async function filterResultsFile(elecID:number):Promise <fileResultsShcemas[]>{
   let results : fileResultsShcemas[] = [];
   if(localPath){
-    const regularExp  = new RegExp(`VOTACION_8_[0-9]{5}_[0-9]{4}.(txt|TXT)$`);
+    const regularExp  = new RegExp(`VOTACION_${elecID}_[0-9]{5}_[0-9]{4}.(txt|TXT)$`);
     const localData = await readLocalData(`${localPath}unzip/`);
     const validateNames = localData.filter(item=>{
       return item.match(regularExp)!==null;
     });
     if(validateNames.length>0){
       validateNames.forEach(item=>{
-        const tempResult = makeFileResultShcema(item);
+        const tempResult = makeFileResultShcema(item,elecID);
         if(tempResult){
           results.push(tempResult);
         }

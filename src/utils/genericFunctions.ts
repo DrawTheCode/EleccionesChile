@@ -50,8 +50,8 @@ export function makeFileShcema(nameFile:string, filter:string): fileShcemas | nu
   return null;
 }
 
-export function makeFileResultShcema(nameFile:string): fileResultsShcemas | null {
-  const firstFilter = new RegExp(`VOTACION_8_`);
+export function makeFileResultShcema(nameFile:string,elecID:number): fileResultsShcemas | null {
+  const firstFilter = new RegExp(`VOTACION_${elecID}_`);
   if(nameFile.match(firstFilter)){
     const firstCut = nameFile.split(firstFilter);
     if(firstCut[1].match(/.(txt|TXT)$/)!==null){

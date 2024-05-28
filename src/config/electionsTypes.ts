@@ -39,7 +39,7 @@ export const election = [
     id:'H',
     name:'Gobernadores Regionales'
   },{
-    id:'l',
+    id:'I',
     name:'GORE Segunda Votación'
   },{
     id:'N',

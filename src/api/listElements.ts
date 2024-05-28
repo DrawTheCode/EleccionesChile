@@ -66,34 +66,64 @@ listing.get('/data/:zone/filter/:type',async (req,res)=>{
   res.send(await getZoneInfoFilterByType(req.params.zone,req.params.type));
 });
 
-results.get('/all',async (req,res) => {
+results.get('/:elecID/all',async (req,res) => {
   corsDefinitions(req,res);
-  res.send(await getResultsSchema());
+  const electionType = parseInt(req.params.elecID);
+  if(!Number.isNaN(electionType)){
+    res.send(await getResultsSchema(electionType));
+  }else{
+    res.send({error:'El valor de "Tipo de elección" debe ser un Número.'});
+  }
 });
 
-results.get('/filter/:key/:value',async (req,res) => {
+results.get('/:elecID/filter/:key/:value',async (req,res) => {
   corsDefinitions(req,res);
-  res.send(await getResultOneFilter(req.params.key,req.params.value));
+  const electionType = parseInt(req.params.elecID);
+  if(!Number.isNaN(electionType)){
+    res.send(await getResultOneFilter(req.params.key,req.params.value,electionType));
+  }else{
+    res.send({error:'El valor de "Tipo de elección" debe ser un Número.'});
+  }
 });
 
-results.get('/filter/:firstKey/:firstValue/:secondKey/:secondValue',async (req,res) => {
+results.get('/:elecID/filter/:firstKey/:firstValue/:secondKey/:secondValue',async (req,res) => {
   corsDefinitions(req,res);
-  res.send(await getResultTwoFilter(req.params.firstKey,req.params.firstValue,req.params.secondKey,req.params.secondValue));
+  const electionType = parseInt(req.params.elecID);
+  if(!Number.isNaN(electionType)){
+    res.send(await getResultTwoFilter(electionType,req.params.firstKey,req.params.firstValue,req.params.secondKey,req.params.secondValue));
+  }else{
+    res.send({error:'El valor de "Tipo de elección" debe ser un Número.'});
+  }
 });
 
-search.get('/by/:complexId',async (req,res) => {
+search.get('/:elecID/by/:complexId',async (req,res) => {
   corsDefinitions(req,res);
-  res.send(await getSearch(req.params.complexId));
+  const electionType = parseInt(req.params.elecID);
+  if(!Number.isNaN(electionType)){
+    res.send(await getSearch(req.params.complexId,electionType));
+  }else{
+    res.send({error:'El valor de "Tipo de elección" debe ser un Número.'});
+  }
 });
 
-search.get('/by/type/:typeZone',async (req,res) => {
+search.get('/:elecID/by/type/:typeZone',async (req,res) => {
   corsDefinitions(req,res);
-  const result = JSON.stringify(await getSearchByType(req.params.typeZone));
-  //console.log('RESULT=>',await result);
-  res.send(await result);
+  const electionType = parseInt(req.params.elecID);
+  if(!Number.isNaN(electionType)){
+    //console.log('RESULT=>',await result);
+    const result = JSON.stringify(await getSearchByType(req.params.typeZone,electionType));
+    res.send(await result);
+  }else{
+    res.send({error:'El valor de "Tipo de elección" debe ser un Número.'});
+  }
 });
 
-search.get('/by/type/:typeZone/:idZone',async (req,res) => {
+search.get('/:elecID/by/type/:typeZone/:idZone',async (req,res) => {
   corsDefinitions(req,res);
-  res.send(await getSearchByTypeAndID(req.params.typeZone,req.params.idZone));
+  const electionType = parseInt(req.params.elecID);
+  if(!Number.isNaN(electionType)){
+    res.send(await getSearchByTypeAndID(req.params.typeZone,req.params.idZone,electionType));
+  }else{
+    res.send({error:'El valor de "Tipo de elección" debe ser un Número.'});
+  }
 });

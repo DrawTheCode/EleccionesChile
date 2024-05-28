@@ -1,9 +1,10 @@
 import express from "express";
+import compression from "compression";
 import { configDotenv } from "dotenv";
 import { listing, results, search, zoneDefinitions } from "./api/listElements";
 
 const plebiscitoReader = express();
-plebiscitoReader.use(express.json());
+plebiscitoReader.use(express.json()).use(compression());
 configDotenv();
 
 
