@@ -1,6 +1,14 @@
 FROM node:18-alpine3.18
 RUN npm i -g ts-node ts-node-dev
 RUN mkdir -p /home/app
+RUN mkdir -p /home/app/data/logs/
+RUN chmod 777 /home/app/data/logs/
+##crontabs
+COPY src/utils/crontab/dev-entrypoint.sh /
+RUN chmod +x /dev-entrypoint.sh
+RUN /usr/bin/crontab /dev-entrypoint.sh
+##RUN /usr/sbin/crond -fb -l 8 -L /home/app/data/logs/runCrond.log
+##ENTRYPOINT ["/dev-entrypoint.sh"]
 EXPOSE 3050
 WORKDIR /home/app
 CMD ["ts-node-dev","src/index.ts"]

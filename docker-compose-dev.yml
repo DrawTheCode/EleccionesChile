@@ -1,4 +1,3 @@
-version: "3.9"
 services:
   elecciones:
     build:
@@ -10,6 +9,6 @@ services:
       - "3050:3050"
     volumes:
       - ./:/home/app
-    command: "/usr/sbin/crond -f -l 0 -c /home/app/src/utils/crontab/ -L /data/logs/cron.log"
+    command: "/usr/sbin/crond -f -l 0 -L /home/app/data/logs/runCrond.log"
 volumes:
   elecciones-data:
