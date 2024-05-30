@@ -5,6 +5,8 @@ import { configDotenv } from "dotenv";
 
 configDotenv();
 
+const DATA_PATH = process.env.DATA_PATH ?? '/home/app/';
+
 export function makeFolderIfNotExist(dir:string){
   if (!fs.existsSync(dir)){
     fs.mkdirSync(dir,{recursive:true,mode:777});
@@ -107,7 +109,8 @@ export async function makeAErrorLogFile(path:string,nameFile:string,error:string
 }
 
 export function dataDisplay(){
-  const dataFolder = 'data/';
+  const curatedPath = DATA_PATH.substring(DATA_PATH.length - 1) === '/' ? DATA_PATH:`${DATA_PATH}/`;
+  const dataFolder = `${curatedPath}data/`;
   makeFolderIfNotExist(dataFolder);
   return dataFolder;
 };

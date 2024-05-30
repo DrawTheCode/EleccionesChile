@@ -1,10 +1,7 @@
 import cron from "node-cron";
-import { configDotenv } from "dotenv";
 import { logToFile } from "../utils/genericFunctions";
+import { dataDisplay } from "../utils/genericFunctions";
 import { copyFilesLocal, decompressFiles } from "./checkSchemas";
-
-configDotenv();
-const DATA_PATH = process.env.DATA_PATH ?? '/home/app/';
 
 async function check(dockerPath:string|false=false): Promise<string>{
   let tempConsole = '';
@@ -16,5 +13,6 @@ async function check(dockerPath:string|false=false): Promise<string>{
 };
 
 cron.schedule('* * * * *', async () => {
-  logToFile(await check(DATA_PATH),`${DATA_PATH}/data/logs/`,'crontab.log');
+  const localDataPath = dataDisplay();
+  logToFile(await check(localDataPath),`${localDataPath}logs/`,'crontab.log');
 });

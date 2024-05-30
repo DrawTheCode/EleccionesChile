@@ -28,7 +28,7 @@ export const getFileList = async (path:string):Promise <string[]|null> => {
 
 export async function copyFilesLocal(rootPath:string|false=false): Promise<string> {
   if(process.env.FTP_PATH && localPath){
-    const tempPath = (rootPath?rootPath:'')+localPath
+    const tempPath = (rootPath?rootPath:'');
     makeFolderIfNotExist(tempPath);
     const listFilesToCopy = await checkNotCopyFiles();
     if(listFilesToCopy && listFilesToCopy.length>0){
@@ -48,7 +48,7 @@ export async function copyFilesLocal(rootPath:string|false=false): Promise<strin
 
 export async function decompressFiles(rootPath:string|false=false): Promise<string>{
   if(localPath){
-    const tempPath = (rootPath?rootPath:'')+localPath
+    const tempPath = (rootPath?rootPath:'');
     const unzipPath = `${tempPath}unzip`;
     makeFolderIfNotExist(unzipPath);
     let localData = await readLocalData(tempPath);
