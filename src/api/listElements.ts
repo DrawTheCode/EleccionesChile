@@ -97,7 +97,7 @@ results.get('/:elecID/filter/:firstKey/:firstValue/:secondKey/:secondValue',asyn
 });
 
 search.get('/:elecID/by/:complexId',async (req,res) => {
-  corsDefinitions(req,res);
+  corsDefinitions(req,res); 
   const electionType = parseInt(req.params.elecID);
   if(!Number.isNaN(electionType)){
     res.send(await getSearch(req.params.complexId,electionType));

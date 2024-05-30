@@ -1,12 +1,18 @@
 import { copyFilesLocal, decompressFiles } from "./checkSchemas";
+import { logToFile } from "../utils/genericFunctions";
+import cron from "node-cron";
 
-const args = process.argv.slice(2).length>0?process.argv.slice(2)[0]:false;
+const DATA_PATH = process.env.DATA_PATH ?? '/hone/app/';
 
-export default function check(dockerPath:string|false=false) {
-  copyFilesLocal(dockerPath);
-  decompressFiles(dockerPath);
+async function check(dockerPath:string|false=false): Promise<string>{
+  let tempConsole = '';
+  tempConsole += await copyFilesLocal(dockerPath);
+  tempConsole += decompressFiles(dockerPath);
   const now = new Date().toLocaleString();
-  console.log(`Última revisión de FTP => ⏱️ ${now}`);
+  tempConsole += `Última revisión de FTP => ⏱️ ${now}. \n`;
+  return tempConsole;
 };
 
-check(args);
+cron.schedule('* * * * *', async () => {
+  logToFile(await check(DATA_PATH),`${DATA_PATH}/data/logs/`,'crontab.log');
+});

@@ -33,6 +33,18 @@ export function makeFileInputCamelCase(name:string):string{
   }
 }
 
+export function logToFile(logMessage:string,logPath:string,logName:string) {
+  if(logPath.match(/\/$/)===null){
+    logPath = `${logPath}/`;
+  }
+  if(logName.match(/^\//)){
+    logName = logName.substring(1,(logName.length - 1));
+  }
+  const logStream = fs.createWriteStream(`${logPath}${logName}`, { flags: 'a' });
+  logStream.write(`${logMessage}\n`);
+  logStream.end();
+}
+
 export function makeFileShcema(nameFile:string, filter:string): fileShcemas | null {
   const firstFilter = new RegExp(`Escenario_${filter}_`);
   if(nameFile.match(firstFilter)){
