@@ -105,7 +105,7 @@ export async function filterSchemasFile(filter:string):Promise <fileShcemas[]>{
   let results : fileShcemas[] = [];
   filter = makeFileInputCamelCase(filter);
   if(localPath){
-    const regularExp  = new RegExp(`Escenario_${filter}_[0-9]{6}.(txt|TXT)$`);
+    const regularExp  = new RegExp(`Escenario_${filter}_[0-9][0-9][0-9][0-9][0-9][0-9]?.(txt|TXT)$`);
     const localData = await readLocalData(localPath);
     const validateNames = localData.filter(item=>{
       return item.match(regularExp)!==null;
@@ -128,7 +128,7 @@ export async function filterSchemasFile(filter:string):Promise <fileShcemas[]>{
 export async function filterResultsFile(elecID:number):Promise <fileResultsShcemas[]>{
   let results : fileResultsShcemas[] = [];
   if(localPath){
-    const regularExp  = new RegExp(`VOTACION_${elecID}_[0-9]{5}_[0-9]{4}.(txt|TXT)$`);
+    const regularExp  = new RegExp(`VOTACION_${elecID}_[0-9][0-9][0-9][0-9][0-9][0-9]?_[0-9]{4}.(txt|TXT)$`);
     const localData = await readLocalData(`${localPath}unzip/`);
     const validateNames = localData.filter(item=>{
       return item.match(regularExp)!==null;

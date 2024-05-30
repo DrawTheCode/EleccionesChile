@@ -94,10 +94,16 @@ const getScenarySchema = async (filter:string) => {
 
 
 export const getResultOneFilter = async (key:string,value:string|number,elecID:number) => {
+  if(key === 'TIPO_ZONA' && Number(value)){
+    return {error:'El tipo zona debe ser una letra.'};
+  }
   key = key.toUpperCase();
   const listKey = ['COD_ELEC','AMBITO','COD_AMBITO','COD_ZONA','TIPO_ZONA','VOTOS'];
-  const tempValue = key!=='TIPO_ZONA' ? value as number : (value as string).toUpperCase();
+  const tempValue = key !=='TIPO_ZONA' ? value as number : (value as string).toUpperCase();
   if(listKey.includes(key)){
+    if(key !== 'TIPO_ZONA' && !Number(value)){
+      return {error:`El valor de ${key} debe ser un número.`};
+    }
     const result = await getResultsSchema(elecID);
     if(result && result?.data!==null){
       const resultList = result.data.filter((item:any)=> {
@@ -140,18 +146,18 @@ export const getResultsSchema = async (elecID:number)  => {
   if(tempResult.length>0 && localPath){
     const details = tempResult[0];
     const result = await readFileSync(`${localPath}unzip/${tempResult[0].name}`,{ encoding: 'utf8' });
-    const listOfLines = result.split(/;(\r\n|\r|\n)/);
-    const data:any = [];
-    listOfLines.forEach(line => {
-      if(line && line.match(/;/)){
-        const reconstructorElement = line.split(';');
+    const listOfLines = await result.split(/;(\r\n|\r|\n)/);
+    let data:any = [];
+    for (let line = 0; line < await listOfLines.length; line++) {
+      if(line && listOfLines[line].match(/;/)){
+        const reconstructorElement = listOfLines[line].split(';');
         if(reconstructorElement.length===6){
           const currentElement = makeVoteSchema(reconstructorElement);
           data.push(currentElement);
         }
       }
-    })
-    return {details,data}
+    }
+    return({details,data});
   }
   return null;
 }
