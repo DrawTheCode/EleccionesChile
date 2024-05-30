@@ -1,8 +1,10 @@
-import { copyFilesLocal, decompressFiles } from "./checkSchemas";
-import { logToFile } from "../utils/genericFunctions";
 import cron from "node-cron";
+import { configDotenv } from "dotenv";
+import { logToFile } from "../utils/genericFunctions";
+import { copyFilesLocal, decompressFiles } from "./checkSchemas";
 
-const DATA_PATH = process.env.DATA_PATH ?? '/hone/app/';
+configDotenv();
+const DATA_PATH = process.env.DATA_PATH ?? '/home/app/';
 
 async function check(dockerPath:string|false=false): Promise<string>{
   let tempConsole = '';
