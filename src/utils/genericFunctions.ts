@@ -71,10 +71,16 @@ export function makeFileResultShcema(nameFile:string,elecID:number): fileResults
     if(firstCut[1].match(/.(txt|TXT)$/)!==null){
       const secondCut = firstCut[1].split(/.(txt|TXT)$/);
       const thirdCut = secondCut[0].split(/_/);
+      function sizeTextPercent(value:string):number{
+        let divisor = 100;
+        if(value.length===6){divisor=1000;}
+        if(value.length===4){divisor=10;}
+        return(parseInt(value)/divisor);
+      }
       return {  
         name: nameFile,
         id: `${thirdCut[0]}${thirdCut[1]}` as unknown as number,
-        percent: (thirdCut[0] as unknown as number)/100,
+        percent: sizeTextPercent(thirdCut[0]),
         hour: `${thirdCut[1].substring(0,2)}:${thirdCut[1].substring(2,4)}`
       }
     }
