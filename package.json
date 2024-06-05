@@ -1,28 +1,27 @@
 {
   "name": "plebiscito2023",
   "version": "1.0.0",
-  "description": "Proyecto de lectura de archivos para votaciones de plebiscito en chile.",
+  "description": "Proyecto de lectura de archivos para votaciones en chile.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node build/index.js",
     "dev": "ts-node-dev src/index.ts",
-    "docker-dev": "docker compose -f docker-compose-dev.yml up",
-    "docker-dev-clear": "docker compose -f docker-compose-dev.yml down",
-    "cron-dev": "ts-node -e 'require(\"./src/subscribers/checkFTP.ts\").check();'",
+    "cron-dev": "ts-node-dev src/subscribers/checkFTP.ts",
     "tsc": "tsc",
     "nohup": "nohup node build/index.js 0</dev/null 1>/dev/null 2>/dev/null &",
-    "cron": "node -e 'require(\"./build/subscribers/checkFTP.js\").check()'"
+    "cron": "node /build/subscribers/checkFTP.js"
   },
   "author": "DrawTheCode",
   "license": "ISC",
   "devDependencies": {
-    "@types/compression": "^1.7.5",
+    "@types/compression": "1.7.5",
     "@types/decompress": "4.2.7",
-    "@types/express": "^4.17.21",
+    "@types/express": "4.17.21",
     "@types/fs-extra": "11.0.4",
     "@types/ftp": "0.3.36",
-    "@types/node-cron": "^3.0.11",
+    "@types/node-cron": "3.0.11",
+    "@types/response-time": "2.3.8",
     "@types/ssh2-sftp-client": "9.0.3",
     "fs-extra": "11.1.1",
     "ts-node-dev": "2.0.0",
@@ -33,8 +32,10 @@
     "compression": "^1.7.4",
     "decompress": "4.2.1",
     "dotenv": "16.3.1",
-    "express": "^4.19.2",
-    "node-cron": "^3.0.3",
+    "express": "4.19.2",
+    "node-cron": "3.0.3",
+    "redis": "4.6.14",
+    "response-time": "2.3.2",
     "ssh2-sftp-client": "9.1.0"
   },
   "eslintConfig": {

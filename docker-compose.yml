@@ -1,7 +1,0 @@
-services:
-  elecciones-app:
-    build: .
-    ports:
-      - "3050:3000"
-    volumes:
-      - ./data:/home/app/data

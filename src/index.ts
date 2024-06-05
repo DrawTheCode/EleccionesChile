@@ -3,18 +3,19 @@ import compression from "compression";
 import { configDotenv } from "dotenv";
 import { listing, results, search, zoneDefinitions } from "./api/listElements";
 
-const plebiscitoReader = express();
-plebiscitoReader.use(express.json()).use(compression());
+const electionReader = express();
+electionReader.use(express.json());
+electionReader.use(compression());
 configDotenv();
 
 
 const PORT = process.env.PORT ?? '3333';
 
-plebiscitoReader.listen(PORT, () => {
+electionReader.listen(PORT, () => {
   console.log(`app running on port => ${PORT} 🐳`)
 });
 
-plebiscitoReader.use('/api/def/',zoneDefinitions);
-plebiscitoReader.use('/api/check/',listing);
-plebiscitoReader.use('/api/result/',results);
-plebiscitoReader.use('/api/search/',search);
+electionReader.use('/api/def/',zoneDefinitions);
+electionReader.use('/api/check/',listing);
+electionReader.use('/api/result/',results);
+electionReader.use('/api/search/',search);
