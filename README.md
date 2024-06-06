@@ -21,14 +21,16 @@ Requerimientos:
 ----
 Los valores necesarios dentro del .env para correr el proyecto son:
 
-- PORT      *puerto por donde saldrá la app*
-- FTP_USER  *nombre de usuario FTP*
-- FTP_PASS  *clave de usuario FTP*
-- FTP_HOST  *corresponde a la ip de la máquina FTP*
-- FTP_PATH  *ruta de archivos en donde se alojarán dentro del FTP*
+- PORT *puerto por donde saldrá la app*
+- FTP_USER *nombre de usuario FTP*
+- FTP_PASS *clave de usuario FTP*
+- FTP_HOST *corresponde a la ip de la máquina FTP*
+- FTP_PATH *ruta de archivos en donde se alojarán dentro del FTP*
 - REDIS_URL ***opcional** ruta donde estará trabajando redis*
-- NODE_ENV  *corresponde al entorno, si estas en local su valor debe ser "develop" en producción debería ser "production"*
-- CORS      *listado de dominios autorizados separados por comas*
+- DATA_PATH=*ruta de archivos en donde se alojará la aplicación dentro del servidor*
+- NODE_ENV *corresponde al entorno, si estas en local su valor debe ser "develop" en producción debería ser "production"*
+- CORS *listado de dominios autorizados separados por comas*
+
 
 ## Definiciones de Endpoint´s
 
@@ -83,6 +85,7 @@ Lista los detalles de los archivos entregados por el SERVEL desde los archivos l
 ----
 Lista los escenarios entregados por el SERVEL desde los archivos locales, estos dan detalles de los tipos de escenarios y sus datos, como **COD_CAND, COD_ELEC, COD_ZONA, CAN_ORDEN, GLOSA_CAND, etc**
 
+
 #### /api/check/data/zonas/filter/:type
 
 ----
@@ -92,12 +95,12 @@ Busca en las zonas según el tipo de ella, ejemplo: países, comunas, locales. L
 
 ----
 
-#### /api/result/:eleccionID/all
+#### /api/result/:electionID/all
 
 ----
 Trae toda la data de los últimos resultados enviados desde el SERVEL.
 
-#### /api/result/:eleccionID/filter/:key/:value
+#### /api/result/:electionID/filter/:key/:value
 
 ----
 >[!CAUTION]
@@ -121,17 +124,17 @@ Trae los datos filtrando por dos valores y sus nombres ingresados en la URL, el 
 ----
 Trae los valores a través de identificadores definidos de antemano.
 
-#### /api/search/:eleccionID/by/:complexId
+#### /api/search/:electionID/by/:complexId
 
 ----
 Trae los resultados con el **:complexId** que es un id compuesto de la zona, dicha combinación es su COD_ZONA + TIPO_ZONA.
 
-#### /api/search/:eleccionID/by/type/:typeZone
+#### /api/search/:electionID/by/type/:typeZone
 
 ----
 Entrega listado de elementos separados por tipos de zonas, *:typeZone* corresponde al TIPO_ZONA que se desea filtrar, esto entregará un listado de elementos que están agrupados por el id de COD_ZONA.
 
-#### /api/search/:eleccionID/by/type/:typeZone/:idZone
+#### /api/search/:electionID/by/type/:typeZone/:idZone
 
 ----
 Entrega listado de elementos separados por tipos de zonas, *:typeZone* corresponde al TIPO_ZONA que se desea filtrar, adicionalmente se puede filtrar por COD_ZONA en *:idZone*, entregando un arreglo con los valores del la elección del área seleccionada.
