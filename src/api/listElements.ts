@@ -17,12 +17,12 @@ search.use(responseTime());
 
 configDotenv();
 const accessCORS = process.env.CORS !== undefined ? process.env.CORS.split(',') : null;
-const REDIS_PATH = process.env.REDIS_PATH !== undefined ? process.env.REDIS_PATH : null;
+const REDIS_URL = process.env.REDIS_URL !== undefined ? process.env.REDIS_URL : null;
 
 async function setRegisterRedis(key:string,data:string){
-  if(REDIS_PATH){
+  if(REDIS_URL){
     try {
-      const client = await createClient({url: 'redis://redis:6379'})
+      const client = await createClient({url: REDIS_URL})
         .on('error', err => console.log('Redis Client Error', err))
         .connect();
       await client.set(key,data);
@@ -35,10 +35,10 @@ async function setRegisterRedis(key:string,data:string){
 }
 
 async function getRegisterRedis(key:string):Promise <string|null>{
-  if(REDIS_PATH){
+  if(REDIS_URL){
     try {
       console.log('estamos aca');
-      const client = await createClient({url: REDIS_PATH})
+      const client = await createClient({url: REDIS_URL})
         .on('error',err => console.log('Redis Client Error => ', err))
         .connect();
       const result = await client.get(key);
