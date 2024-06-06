@@ -31,7 +31,6 @@ Los valores necesarios dentro del .env para correr el proyecto son:
 - NODE_ENV *corresponde al entorno, si estas en local su valor debe ser "develop" en producción debería ser "production"*
 - CORS *listado de dominios autorizados separados por comas*
 
-
 ## Definiciones de Endpoint´s
 
 ### Def´s
@@ -84,7 +83,6 @@ Lista los detalles de los archivos entregados por el SERVEL desde los archivos l
 
 ----
 Lista los escenarios entregados por el SERVEL desde los archivos locales, estos dan detalles de los tipos de escenarios y sus datos, como **COD_CAND, COD_ELEC, COD_ZONA, CAN_ORDEN, GLOSA_CAND, etc**
-
 
 #### /api/check/data/zonas/filter/:type
 
