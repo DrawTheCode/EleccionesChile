@@ -78,11 +78,11 @@ Busca en las zonas según el tipo de ella, ejemplo: países, comunas, locales. L
 
 ### Result´s
 ----
-#### /api/result/:eleccionID/all
+#### /api/result/:electionID/all
 ----
 Trae toda la data de los últimos resultados enviados desde el SERVEL.
 
-#### /api/result/:eleccionID/filter/:key/:value
+#### /api/result/:electionID/filter/:key/:value
 ----
 >[!CAUTION]
 >Este filtro puede traer elementos no deseados (cosa que sucedio en entrega de datos anteriores), ejemplo un local de votación podría tener el mismo COD_ZONA que un país.
@@ -92,7 +92,7 @@ corresponde al campo por el cual se quiere filtrar y el *:value* al valor de dic
 
 **Ejemplo de búsqueda:** https://apiservel.latercera.com/api/result/filter/COD_ZONA/1018
 
-#### /api/result/:eleccionID/filter/:firstKey/:firstValue/:secondKey/:secondValue
+#### /api/result/:electionID/filter/:firstKey/:firstValue/:secondKey/:secondValue
 ----
 Trae los datos filtrando por dos valores y sus nombres ingresados en la URL, el valor *:firstKey y :secondKey* corresponde al campo por el cual se quiere filtrar y el *:firstValue y :secondValue* al valor de dichos campos.
 
@@ -103,14 +103,14 @@ Trae los datos filtrando por dos valores y sus nombres ingresados en la URL, el 
 ----
 Trae los valores a través de identificadores definidos de antemano.
 
-#### /api/search/:eleccionID/by/:complexId
+#### /api/search/:electionID/by/:complexId
 ----
 Trae los resultados con el **:complexId** que es un id compuesto de la zona, dicha combinación es su COD_ZONA + TIPO_ZONA.
 
-#### /api/search/:eleccionID/by/type/:typeZone
+#### /api/search/:electionID/by/type/:typeZone
 ----
 Entrega listado de elementos separados por tipos de zonas, *:typeZone* corresponde al TIPO_ZONA que se desea filtrar, esto entregará un listado de elementos que están agrupados por el id de COD_ZONA.
 
-#### /api/search/:eleccionID/by/type/:typeZone/:idZone
+#### /api/search/:electionID/by/type/:typeZone/:idZone
 ----
 Entrega listado de elementos separados por tipos de zonas, *:typeZone* corresponde al TIPO_ZONA que se desea filtrar, adicionalmente se puede filtrar por COD_ZONA en *:idZone*, entregando un arreglo con los valores del la elección del área seleccionada.
