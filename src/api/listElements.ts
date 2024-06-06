@@ -17,12 +17,12 @@ search.use(responseTime());
 
 configDotenv();
 const accessCORS = process.env.CORS !== undefined ? process.env.CORS.split(',') : null;
-const REDIS_PATH = process.env.REDIS_PATH !== undefined ? process.env.REDIS_PATH : null;
+const REDIS_URL = process.env.REDIS_URL !== undefined ? process.env.REDIS_URL : null;
 
 async function setRegisterRedis(key:string,data:string){
-  if(REDIS_PATH){
+  if(REDIS_URL){
     try {
-      const client = await createClient({url: 'redis://redis:6379'})
+      const client = await createClient({url: `redis://${REDIS_URL}`})
         .on('error', err => console.log('Redis Client Error', err))
         .connect();
       await client.set(key,data);
@@ -35,10 +35,10 @@ async function setRegisterRedis(key:string,data:string){
 }
 
 async function getRegisterRedis(key:string):Promise <string|null>{
-  if(REDIS_PATH){
+  if(REDIS_URL){
     try {
       console.log('estamos aca');
-      const client = await createClient({url: REDIS_PATH})
+      const client = await createClient({url: `redis://${REDIS_URL}`})
         .on('error',err => console.log('Redis Client Error => ', err))
         .connect();
       const result = await client.get(key);
@@ -78,29 +78,70 @@ zoneDefinitions.get('/ambit', (req,res )=>{
 listing.get('/files',async (req,res)=>{
   if(process.env.FTP_PATH){
     corsDefinitions(req,res);
-    res.json(await getFileList(process.env.FTP_PATH));
+    const response = await getRegisterRedis(req.originalUrl);
+    if(response){
+      res.set('cache', ['true']);
+      res.json(JSON.parse(response));
+    }else{
+      const result = await getFileList(process.env.FTP_PATH);
+      await setRegisterRedis(req.originalUrl,JSON.stringify(result));
+      res.json(result);
+    }
+  }else{
+    res.json({error:'No hay ruta setteada en el sistema.'});
   }
-  return {error:'No hay ruta setteada en el sistema.'}
 });
 
 listing.get('/not-copy',async (req,res)=>{
   corsDefinitions(req,res);
-  res.json(await checkNotCopyFiles());
+  const response = await getRegisterRedis(req.originalUrl);
+  if(response){
+    res.set('cache', ['true']);
+    res.json(JSON.parse(response));
+  }else{
+    const result = await checkNotCopyFiles();
+    await setRegisterRedis(req.originalUrl,JSON.stringify(result));
+    res.json(result);
+  }
 });
 
 listing.get('/scenery/:zone',async (req,res)=>{
   corsDefinitions(req,res);
-  res.json(await filterSchemasFile(req.params.zone));
+  const response = await getRegisterRedis(req.originalUrl);
+  if(response){
+    res.set('cache', ['true']);
+    res.json(JSON.parse(response));
+  }else{
+    const result = await filterSchemasFile(req.params.zone);
+    await setRegisterRedis(req.originalUrl,JSON.stringify(result));
+    res.json(result);
+  }
 });
 
 listing.get('/data/:zone',async (req,res)=>{
   corsDefinitions(req,res);
-  res.json(await getZoneInfo(req.params.zone));
+  const response = await getRegisterRedis(req.originalUrl);
+  if(response){
+    res.set('cache', ['true']);
+    res.json(JSON.parse(response));
+  }else{
+    const result = await getZoneInfo(req.params.zone);
+    await setRegisterRedis(req.originalUrl,JSON.stringify(result));
+    res.json(result);
+  }
 });
 
 listing.get('/data/:zone/filter/:type',async (req,res)=>{
   corsDefinitions(req,res);
-  res.json(await getZoneInfoFilterByType(req.params.zone,req.params.type));
+  const response = await getRegisterRedis(req.originalUrl);
+  if(response){
+    res.set('cache', ['true']);
+    res.json(JSON.parse(response));
+  }else{
+    const result = await getZoneInfoFilterByType(req.params.zone,req.params.type);
+    await setRegisterRedis(req.originalUrl,JSON.stringify(result));
+    res.json(result);
+  }
 });
 
 results.get('/:elecID/all',async (req,res) => {
@@ -109,11 +150,13 @@ results.get('/:elecID/all',async (req,res) => {
   if(!Number.isNaN(electionType)){
     const response = await getRegisterRedis(req.originalUrl);
     if(response){
+      res.set('cache', ['true']);
       res.json(JSON.parse(response));
+    }else{
+      const result = await getResultsSchema(electionType);
+      await setRegisterRedis(req.originalUrl,JSON.stringify(result));
+      res.json(result);
     }
-    const result = await getResultsSchema(electionType);
-    await setRegisterRedis(req.originalUrl,JSON.stringify(result));
-    res.json(result);
   }else{
     res.json({error:'El valor de "Tipo de elección" debe ser un Número.'});
   }
@@ -125,11 +168,13 @@ results.get('/:elecID/filter/:key/:value',async (req,res) => {
   if(!Number.isNaN(electionType)){
     const response = await getRegisterRedis(req.originalUrl);
     if(response){
+      res.set('cache', ['true']);
       res.json(JSON.parse(response));
+    }else{
+      const result = await getResultOneFilter(req.params.key,req.params.value,electionType);
+      await setRegisterRedis(req.originalUrl,JSON.stringify(result));
+      res.json(result);
     }
-    const result = await getResultOneFilter(req.params.key,req.params.value,electionType);
-    await setRegisterRedis(req.originalUrl,JSON.stringify(result));
-    res.json(result);
   }else{
     res.json({error:'El valor de "Tipo de elección" debe ser un Número.'});
   }
@@ -141,11 +186,13 @@ results.get('/:elecID/filter/:firstKey/:firstValue/:secondKey/:secondValue',asyn
   if(!Number.isNaN(electionType)){
     const response = await getRegisterRedis(req.originalUrl);
     if(response){
+      res.set('cache', ['true']);
       res.json(JSON.parse(response));
+    }else{
+      const result = await getResultTwoFilter(electionType,req.params.firstKey,req.params.firstValue,req.params.secondKey,req.params.secondValue);
+      await setRegisterRedis(req.originalUrl,JSON.stringify(result));
+      res.json(result);
     }
-    const result = await getResultTwoFilter(electionType,req.params.firstKey,req.params.firstValue,req.params.secondKey,req.params.secondValue);
-    await setRegisterRedis(req.originalUrl,JSON.stringify(result));
-    res.json(result);
   }else{
     res.json({error:'El valor de "Tipo de elección" debe ser un Número.'});
   }
@@ -158,11 +205,13 @@ search.get('/:elecID/by/:complexId',async (req,res) => {
   if(!Number.isNaN(electionType)){
     const response = await getRegisterRedis(req.originalUrl);
     if(response){
+      res.set('cache', ['true']);
       res.json(JSON.parse(response));
+    }else{
+      const result = await getSearch(req.params.complexId,electionType);
+      setRegisterRedis(req.originalUrl,JSON.stringify(result));
+      res.json(result);
     }
-    const result = await getSearch(req.params.complexId,electionType);
-    setRegisterRedis(req.originalUrl,JSON.stringify(result));
-    res.json(result);
   }else{
     res.json({error:'El valor de "Tipo de elección" debe ser un Número.'});
   }
@@ -174,11 +223,14 @@ search.get('/:elecID/by/type/:typeZone',async (req,res) => {
   if(!Number.isNaN(electionType)){
     const response = await getRegisterRedis(req.originalUrl);
     if(response){
+      res.set('cache', ['true']);
       res.json(JSON.parse(response));
+    }else{
+      const result = await getSearchByType(req.params.typeZone,electionType);
+      setRegisterRedis(req.originalUrl,JSON.stringify(result));
+      res.json(result);
     }
-    const result = await getSearchByType(req.params.typeZone,electionType);
-    setRegisterRedis(req.originalUrl,JSON.stringify(result));
-    res.json(result);
+    
   }else{
     res.json({error:'El valor de "Tipo de elección" debe ser un Número.'});
   }
@@ -190,11 +242,13 @@ search.get('/:elecID/by/type/:typeZone/:idZone',async (req,res) => {
   if(!Number.isNaN(electionType)){
     const response = await getRegisterRedis(req.originalUrl);
     if(response){
+      res.set('cache', ['true']);
       res.json(JSON.parse(response));
+    }else{
+      const result = await getSearchByTypeAndID(req.params.typeZone,req.params.idZone,electionType);
+      setRegisterRedis(req.originalUrl,JSON.stringify(result));
+      res.json(result);
     }
-    const result = await getSearchByTypeAndID(req.params.typeZone,req.params.idZone,electionType);
-    setRegisterRedis(req.originalUrl,JSON.stringify(result));
-    res.json(result);
   }else{
     res.json({error:'El valor de "Tipo de elección" debe ser un Número.'});
   }

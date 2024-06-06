@@ -26,9 +26,11 @@ Los valores necesarios dentro del .env para correr el proyecto son:
 - FTP_PASS *clave de usuario FTP*
 - FTP_HOST *corresponde a la ip de la máquina FTP*
 - FTP_PATH *ruta de archivos en donde se alojarán dentro del FTP*
+- REDIS_URL ***opcional** ruta donde estará trabajando redis*
 - DATA_PATH=*ruta de archivos en donde se alojará la aplicación dentro del servidor*
 - NODE_ENV *corresponde al entorno, si estas en local su valor debe ser "develop" en producción debería ser "production"*
 - CORS *listado de dominios autorizados separados por comas*
+
 
 ## Definiciones de Endpoint´s
 
@@ -81,7 +83,8 @@ Lista los detalles de los archivos entregados por el SERVEL desde los archivos l
 #### /api/check/data/:diferenciador_del_archivo
 
 ----
-Lista los escenarios entregados por el SERVEL desde los archivos locales, estos dan detalles de los tipos de escenarios y sus datos, como **COD_CAND, COD_ELEC, COD_ZONA, CAN_ORDEN, GLOSA_CAND, etc**.
+Lista los escenarios entregados por el SERVEL desde los archivos locales, estos dan detalles de los tipos de escenarios y sus datos, como **COD_CAND, COD_ELEC, COD_ZONA, CAN_ORDEN, GLOSA_CAND, etc**
+
 
 #### /api/check/data/zonas/filter/:type
 
@@ -108,7 +111,7 @@ corresponde al campo por el cual se quiere filtrar y el *:value* al valor de dic
 
 **Ejemplo de búsqueda:** <https://apiservel.latercera.com/api/result/filter/COD_ZONA/1018>
 
-#### /api/result/:electionID/filter/:firstKey/:firstValue/:secondKey/:secondValue
+#### /api/result/:eleccionID/filter/:firstKey/:firstValue/:secondKey/:secondValue
 
 ----
 Trae los datos filtrando por dos valores y sus nombres ingresados en la URL, el valor *:firstKey y :secondKey* corresponde al campo por el cual se quiere filtrar y el *:firstValue y :secondValue* al valor de dichos campos.

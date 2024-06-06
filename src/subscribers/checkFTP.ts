@@ -19,12 +19,12 @@ async function checkFTP(dockerPath:string|false=false): Promise<string>{
 async function checkUnzip(dockerPath:string|false=false): Promise<string|null>{
   let tempConsole = '';
   const unzipResult = await decompressFiles(dockerPath);
+  const now = new Date().toLocaleString();
   if(unzipResult){
-    const now = new Date().toLocaleString();
     tempConsole += `Último archivo descomprimido => ⏱️ ${now}. \n`;
     return tempConsole;
   }
-  return null;
+  return `No hay archivos que descomprimir => ⏱️ ${now}. \n`;
 };
 
 cron.schedule('* * * * *', async () => {
@@ -35,7 +35,7 @@ cron.schedule('* * * * *', async () => {
   }
 });
 
-cron.schedule('* * * * * *', async () => {
+cron.schedule('30 * * * * *', async () => {
   const unzipResult = await checkUnzip(localDataPath);
   if(unzipResult!==null){
     if(NODE_ENV==='develop'){
