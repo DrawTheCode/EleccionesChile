@@ -34,13 +34,15 @@ const accessCORS =
 const REDIS_URL =
   process.env.REDIS_URL !== undefined ? process.env.REDIS_URL : null;
 
-async function setRegisterRedis(key: string, data: string) {
+async function setRegisterRedis(key: string, data: string, ttl: number = 3600) {
   if (REDIS_URL) {
     try {
-      const client = await createClient({ url: REDIS_URL })
-        .on('error', err => console.log('Redis Client Error', err))
-        .connect();
-      await client.set(key, data);
+      const client = createClient({ url: REDIS_URL });
+      client.on('error', err => console.log('Redis Client Error', err));
+      await client.connect();
+      await client.set(key, data, {
+        EX: ttl,
+      });
       await client.disconnect();
     } catch (error) {
       console.error('ERROR=>', error);
@@ -49,21 +51,24 @@ async function setRegisterRedis(key: string, data: string) {
   return null;
 }
 
-async function getRegisterRedis(key: string): Promise<string | null> {
+async function getRegisterRedis(
+  key: string,
+): Promise<{ data: string | null; ttl: number | null }> {
   if (REDIS_URL) {
     try {
       console.log('estamos aca');
-      const client = await createClient({ url: REDIS_URL })
-        .on('error', err => console.log('Redis Client Error => ', err))
-        .connect();
+      const client = createClient({ url: REDIS_URL });
+      client.on('error', err => console.log('Redis Client Error => ', err));
+      await client.connect();
       const result = await client.get(key);
+      const ttl = await client.ttl(key);
       await client.disconnect();
-      return result;
+      return { data: result, ttl: ttl > 0 ? ttl : null };
     } catch (error) {
       console.error('ERROR=>', error);
     }
   }
-  return null;
+  return { data: null, ttl: null };
 }
 
 function corsDefinitions(req: Request, res: Response) {
@@ -94,9 +99,10 @@ listing.get('/files', async (req, res) => {
   if (process.env.FTP_PATH) {
     corsDefinitions(req, res);
     const response = await getRegisterRedis(req.originalUrl);
-    if (response) {
+    if (response.data) {
       res.set('cache', ['true']);
-      res.json(JSON.parse(response));
+      res.set('X-Redis-TTL', response.ttl?.toString() || '0');
+      res.json(JSON.parse(response.data));
     } else {
       const result = await getFileList(process.env.FTP_PATH);
       await setRegisterRedis(req.originalUrl, JSON.stringify(result));
@@ -110,9 +116,10 @@ listing.get('/files', async (req, res) => {
 listing.get('/not-copy', async (req, res) => {
   corsDefinitions(req, res);
   const response = await getRegisterRedis(req.originalUrl);
-  if (response) {
+  if (response.data) {
     res.set('cache', ['true']);
-    res.json(JSON.parse(response));
+    res.set('X-Redis-TTL', response.ttl?.toString() || '0');
+    res.json(JSON.parse(response.data));
   } else {
     const result = await checkNotCopyFiles();
     await setRegisterRedis(req.originalUrl, JSON.stringify(result));
@@ -123,9 +130,10 @@ listing.get('/not-copy', async (req, res) => {
 listing.get('/scenery/:zone', async (req, res) => {
   corsDefinitions(req, res);
   const response = await getRegisterRedis(req.originalUrl);
-  if (response) {
+  if (response.data) {
     res.set('cache', ['true']);
-    res.json(JSON.parse(response));
+    res.set('X-Redis-TTL', response.ttl?.toString() || '0');
+    res.json(JSON.parse(response.data));
   } else {
     const result = await filterSchemasFile(req.params.zone);
     await setRegisterRedis(req.originalUrl, JSON.stringify(result));
@@ -136,9 +144,10 @@ listing.get('/scenery/:zone', async (req, res) => {
 listing.get('/data/:zone', async (req, res) => {
   corsDefinitions(req, res);
   const response = await getRegisterRedis(req.originalUrl);
-  if (response) {
+  if (response.data) {
     res.set('cache', ['true']);
-    res.json(JSON.parse(response));
+    res.set('X-Redis-TTL', response.ttl?.toString() || '0');
+    res.json(JSON.parse(response.data));
   } else {
     const result = await getZoneInfo(req.params.zone);
     await setRegisterRedis(req.originalUrl, JSON.stringify(result));
@@ -149,9 +158,10 @@ listing.get('/data/:zone', async (req, res) => {
 listing.get('/data/:zone/filter/:type', async (req, res) => {
   corsDefinitions(req, res);
   const response = await getRegisterRedis(req.originalUrl);
-  if (response) {
+  if (response.data) {
     res.set('cache', ['true']);
-    res.json(JSON.parse(response));
+    res.set('X-Redis-TTL', response.ttl?.toString() || '0');
+    res.json(JSON.parse(response.data));
   } else {
     const result = await getZoneInfoFilterByType(
       req.params.zone,
@@ -167,9 +177,10 @@ results.get('/:elecID/all', async (req, res) => {
   const electionType = parseInt(req.params.elecID);
   if (!Number.isNaN(electionType)) {
     const response = await getRegisterRedis(req.originalUrl);
-    if (response) {
+    if (response.data) {
       res.set('cache', ['true']);
-      res.json(JSON.parse(response));
+      res.set('X-Redis-TTL', response.ttl?.toString() || '0');
+      res.json(JSON.parse(response.data));
     } else {
       const result = await getResultsSchema(electionType);
       await setRegisterRedis(req.originalUrl, JSON.stringify(result));
@@ -185,9 +196,10 @@ results.get('/:elecID/filter/:key/:value', async (req, res) => {
   const electionType = parseInt(req.params.elecID);
   if (!Number.isNaN(electionType)) {
     const response = await getRegisterRedis(req.originalUrl);
-    if (response) {
+    if (response.data) {
       res.set('cache', ['true']);
-      res.json(JSON.parse(response));
+      res.set('X-Redis-TTL', response.ttl?.toString() || '0');
+      res.json(JSON.parse(response.data));
     } else {
       const result = await getResultOneFilter(
         req.params.key,
@@ -209,9 +221,10 @@ results.get(
     const electionType = parseInt(req.params.elecID);
     if (!Number.isNaN(electionType)) {
       const response = await getRegisterRedis(req.originalUrl);
-      if (response) {
+      if (response.data) {
         res.set('cache', ['true']);
-        res.json(JSON.parse(response));
+        res.set('X-Redis-TTL', response.ttl?.toString() || '0');
+        res.json(JSON.parse(response.data));
       } else {
         const result = await getResultTwoFilter(
           electionType,
@@ -234,9 +247,10 @@ search.get('/:elecID/by/:complexId', async (req, res) => {
   const electionType = parseInt(req.params.elecID);
   if (!Number.isNaN(electionType)) {
     const response = await getRegisterRedis(req.originalUrl);
-    if (response) {
+    if (response.data) {
       res.set('cache', ['true']);
-      res.json(JSON.parse(response));
+      res.set('X-Redis-TTL', response.ttl?.toString() || '0');
+      res.json(JSON.parse(response.data));
     } else {
       const result = await getSearch(req.params.complexId, electionType);
       setRegisterRedis(req.originalUrl, JSON.stringify(result));
@@ -252,9 +266,10 @@ search.get('/:elecID/by/type/:typeZone', async (req, res) => {
   const electionType = parseInt(req.params.elecID);
   if (!Number.isNaN(electionType)) {
     const response = await getRegisterRedis(req.originalUrl);
-    if (response) {
+    if (response.data) {
       res.set('cache', ['true']);
-      res.json(JSON.parse(response));
+      res.set('X-Redis-TTL', response.ttl?.toString() || '0');
+      res.json(JSON.parse(response.data));
     } else {
       const result = await getSearchByType(req.params.typeZone, electionType);
       setRegisterRedis(req.originalUrl, JSON.stringify(result));
@@ -270,9 +285,10 @@ search.get('/:elecID/by/type/:typeZone/:idZone', async (req, res) => {
   const electionType = parseInt(req.params.elecID);
   if (!Number.isNaN(electionType)) {
     const response = await getRegisterRedis(req.originalUrl);
-    if (response) {
+    if (response.data) {
       res.set('cache', ['true']);
-      res.json(JSON.parse(response));
+      res.set('X-Redis-TTL', response.ttl?.toString() || '0');
+      res.json(JSON.parse(response.data));
     } else {
       const result = await getSearchByTypeAndID(
         req.params.typeZone,
