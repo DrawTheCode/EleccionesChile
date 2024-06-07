@@ -56,7 +56,6 @@ async function getRegisterRedis(
 ): Promise<{ data: string | null; ttl: number | null }> {
   if (REDIS_URL) {
     try {
-      console.log('estamos aca');
       const client = createClient({ url: REDIS_URL });
       client.on('error', err => console.log('Redis Client Error => ', err));
       await client.connect();
@@ -98,6 +97,10 @@ zoneDefinitions.get('/ambit', (req, res) => {
 listing.get('/files', async (req, res) => {
   if (process.env.FTP_PATH) {
     corsDefinitions(req, res);
+    const resetCache = req.query.resetCache === 'true';
+    if (resetCache) {
+      await setRegisterRedis(req.originalUrl, '', 1); // Clear cache
+    }
     const response = await getRegisterRedis(req.originalUrl);
     if (response.data) {
       res.set('cache', ['true']);
@@ -115,6 +118,10 @@ listing.get('/files', async (req, res) => {
 
 listing.get('/not-copy', async (req, res) => {
   corsDefinitions(req, res);
+  const resetCache = req.query.resetCache === 'true';
+  if (resetCache) {
+    await setRegisterRedis(req.originalUrl, '', 1); // Clear cache
+  }
   const response = await getRegisterRedis(req.originalUrl);
   if (response.data) {
     res.set('cache', ['true']);
@@ -129,6 +136,10 @@ listing.get('/not-copy', async (req, res) => {
 
 listing.get('/scenery/:zone', async (req, res) => {
   corsDefinitions(req, res);
+  const resetCache = req.query.resetCache === 'true';
+  if (resetCache) {
+    await setRegisterRedis(req.originalUrl, '', 1); // Clear cache
+  }
   const response = await getRegisterRedis(req.originalUrl);
   if (response.data) {
     res.set('cache', ['true']);
@@ -143,6 +154,10 @@ listing.get('/scenery/:zone', async (req, res) => {
 
 listing.get('/data/:zone', async (req, res) => {
   corsDefinitions(req, res);
+  const resetCache = req.query.resetCache === 'true';
+  if (resetCache) {
+    await setRegisterRedis(req.originalUrl, '', 1); // Clear cache
+  }
   const response = await getRegisterRedis(req.originalUrl);
   if (response.data) {
     res.set('cache', ['true']);
@@ -157,6 +172,10 @@ listing.get('/data/:zone', async (req, res) => {
 
 listing.get('/data/:zone/filter/:type', async (req, res) => {
   corsDefinitions(req, res);
+  const resetCache = req.query.resetCache === 'true';
+  if (resetCache) {
+    await setRegisterRedis(req.originalUrl, '', 1); // Clear cache
+  }
   const response = await getRegisterRedis(req.originalUrl);
   if (response.data) {
     res.set('cache', ['true']);
@@ -175,6 +194,10 @@ listing.get('/data/:zone/filter/:type', async (req, res) => {
 results.get('/:elecID/all', async (req, res) => {
   corsDefinitions(req, res);
   const electionType = parseInt(req.params.elecID);
+  const resetCache = req.query.resetCache === 'true';
+  if (resetCache) {
+    await setRegisterRedis(req.originalUrl, '', 1); // Clear cache
+  }
   if (!Number.isNaN(electionType)) {
     const response = await getRegisterRedis(req.originalUrl);
     if (response.data) {
@@ -194,6 +217,10 @@ results.get('/:elecID/all', async (req, res) => {
 results.get('/:elecID/filter/:key/:value', async (req, res) => {
   corsDefinitions(req, res);
   const electionType = parseInt(req.params.elecID);
+  const resetCache = req.query.resetCache === 'true';
+  if (resetCache) {
+    await setRegisterRedis(req.originalUrl, '', 1); // Clear cache
+  }
   if (!Number.isNaN(electionType)) {
     const response = await getRegisterRedis(req.originalUrl);
     if (response.data) {
@@ -219,6 +246,10 @@ results.get(
   async (req, res) => {
     corsDefinitions(req, res);
     const electionType = parseInt(req.params.elecID);
+    const resetCache = req.query.resetCache === 'true';
+    if (resetCache) {
+      await setRegisterRedis(req.originalUrl, '', 1); // Clear cache
+    }
     if (!Number.isNaN(electionType)) {
       const response = await getRegisterRedis(req.originalUrl);
       if (response.data) {
@@ -245,6 +276,10 @@ results.get(
 search.get('/:elecID/by/:complexId', async (req, res) => {
   corsDefinitions(req, res);
   const electionType = parseInt(req.params.elecID);
+  const resetCache = req.query.resetCache === 'true';
+  if (resetCache) {
+    await setRegisterRedis(req.originalUrl, '', 1); // Clear cache
+  }
   if (!Number.isNaN(electionType)) {
     const response = await getRegisterRedis(req.originalUrl);
     if (response.data) {
@@ -264,6 +299,10 @@ search.get('/:elecID/by/:complexId', async (req, res) => {
 search.get('/:elecID/by/type/:typeZone', async (req, res) => {
   corsDefinitions(req, res);
   const electionType = parseInt(req.params.elecID);
+  const resetCache = req.query.resetCache === 'true';
+  if (resetCache) {
+    await setRegisterRedis(req.originalUrl, '', 1); // Clear cache
+  }
   if (!Number.isNaN(electionType)) {
     const response = await getRegisterRedis(req.originalUrl);
     if (response.data) {
@@ -283,6 +322,10 @@ search.get('/:elecID/by/type/:typeZone', async (req, res) => {
 search.get('/:elecID/by/type/:typeZone/:idZone', async (req, res) => {
   corsDefinitions(req, res);
   const electionType = parseInt(req.params.elecID);
+  const resetCache = req.query.resetCache === 'true';
+  if (resetCache) {
+    await setRegisterRedis(req.originalUrl, '', 1); // Clear cache
+  }
   if (!Number.isNaN(electionType)) {
     const response = await getRegisterRedis(req.originalUrl);
     if (response.data) {
