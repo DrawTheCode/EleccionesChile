@@ -3,7 +3,7 @@
   "info": {
     "version": "1.0.0",
     "title": "REST API",
-    "description": ""
+    "description": "API for managing election data in Chile. It includes endpoints for fetching static definitions, checking file statuses, retrieving data, and searching results."
   },
   "host": "charlyapi2.prima.localhost",
   "basePath": "/api",
@@ -11,413 +11,537 @@
   "paths": {
     "/def/zones": {
       "get": {
-        "description": "",
+        "description": "Retrieve a list of zone types with their respective IDs. These values indicate the level of significance of the zones or locations.",
         "parameters": [
           {
             "name": "referer",
             "in": "header",
-            "type": "string"
+            "type": "string",
+            "description": "The referrer of the request."
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "A list of zone types with their IDs.",
+            "examples": {
+              "application/json": [{ "id": "G", "value": "Global" }]
+            }
           }
         }
       }
     },
     "/def/elec": {
       "get": {
-        "description": "",
+        "description": "Retrieve a list of election types with their IDs.",
         "parameters": [
           {
             "name": "referer",
             "in": "header",
-            "type": "string"
+            "type": "string",
+            "description": "The referrer of the request."
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "A list of election types with their IDs.",
+            "examples": {
+              "application/json": [
+                { "id": "N", "name": "Votación Plebiscito Constitucional" }
+              ]
+            }
           }
         }
       }
     },
     "/def/ambit": {
       "get": {
-        "description": "",
+        "description": "Retrieve a list of voting scopes.",
         "parameters": [
           {
             "name": "referer",
             "in": "header",
-            "type": "string"
+            "type": "string",
+            "description": "The referrer of the request."
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "A list of voting scopes.",
+            "examples": {
+              "application/json": [{ "id": 1, "name": "Votación Pactos" }]
+            }
           }
         }
       }
     },
     "/check/files": {
       "get": {
-        "description": "",
+        "description": "List the files copied on the server at the top level. This does not include decompressed files.",
         "parameters": [
           {
             "name": "resetCache",
             "in": "query",
-            "type": "string"
+            "type": "string",
+            "description": "Optional parameter to reset the cache."
           },
           {
             "name": "referer",
             "in": "header",
-            "type": "string"
+            "type": "string",
+            "description": "The referrer of the request."
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "A list of copied files."
           }
         }
       }
     },
     "/check/not-copy": {
       "get": {
-        "description": "",
+        "description": "Show a list of files that have not been copied between the local server and the one provided to SERVEL.",
         "parameters": [
           {
             "name": "resetCache",
             "in": "query",
-            "type": "string"
+            "type": "string",
+            "description": "Optional parameter to reset the cache."
           },
           {
             "name": "referer",
             "in": "header",
-            "type": "string"
+            "type": "string",
+            "description": "The referrer of the request."
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "A list of files not copied."
           }
         }
       }
     },
     "/check/scenery/{zone}": {
       "get": {
-        "description": "",
+        "description": "List the details of files provided by SERVEL from local files, showing details such as file metadata, not the content.",
         "parameters": [
           {
             "name": "zone",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "The zone identifier."
           },
           {
             "name": "resetCache",
             "in": "query",
-            "type": "string"
+            "type": "string",
+            "description": "Optional parameter to reset the cache."
           },
           {
             "name": "referer",
             "in": "header",
-            "type": "string"
+            "type": "string",
+            "description": "The referrer of the request."
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Details of files for the specified zone."
           }
         }
       }
     },
     "/check/data/{zone}": {
       "get": {
-        "description": "",
+        "description": "List the scenarios provided by SERVEL from local files, detailing the types of scenarios and their data.",
         "parameters": [
           {
             "name": "zone",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "The zone identifier."
           },
           {
             "name": "resetCache",
             "in": "query",
-            "type": "string"
+            "type": "string",
+            "description": "Optional parameter to reset the cache."
           },
           {
             "name": "referer",
             "in": "header",
-            "type": "string"
+            "type": "string",
+            "description": "The referrer of the request."
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Details of scenarios for the specified zone.",
+            "examples": {
+              "application/json": [
+                {
+                  "COD_CAND": "123",
+                  "COD_ELEC": "456",
+                  "COD_ZONA": "789",
+                  "CAN_ORDEN": "1",
+                  "GLOSA_CAND": "Candidate Name"
+                }
+              ]
+            }
           }
         }
       }
     },
     "/check/data/{zone}/filter/{type}": {
       "get": {
-        "description": "",
+        "description": "Search in the zones based on the specified type (e.g., countries, communes, locations).",
         "parameters": [
           {
             "name": "zone",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "The zone identifier."
           },
           {
             "name": "type",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "The type of the zone."
           },
           {
             "name": "resetCache",
             "in": "query",
-            "type": "string"
+            "type": "string",
+            "description": "Optional parameter to reset the cache."
           },
           {
             "name": "referer",
             "in": "header",
-            "type": "string"
+            "type": "string",
+            "description": "The referrer of the request."
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Details of zones based on the specified type.",
+            "examples": {
+              "application/json": [
+                {
+                  "COD_ZONA": "1018",
+                  "GLOSA_ZONA": "Zone Name",
+                  "TIPO_ZONA": "Zone Type",
+                  "ORDEN_ZONA": "1"
+                }
+              ]
+            }
           }
         }
       }
     },
-    "/results/{elecID}/all": {
+    "/result/{elecID}/all": {
       "get": {
-        "description": "",
+        "description": "Retrieve all the latest results data sent from SERVEL.",
         "parameters": [
           {
             "name": "elecID",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "The election identifier."
           },
           {
             "name": "resetCache",
             "in": "query",
-            "type": "string"
+            "type": "string",
+            "description": "Optional parameter to reset the cache."
           },
           {
             "name": "referer",
             "in": "header",
-            "type": "string"
+            "type": "string",
+            "description": "The referrer of the request."
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "All results data for the specified election."
           }
         }
       }
     },
-    "/results/{elecID}/filter/{key}/{value}": {
+    "/result/{elecID}/filter/{key}/{value}": {
       "get": {
-        "description": "",
+        "description": "Retrieve data by filtering based on the specified key and value. The key represents the field to filter on, and the value is the value to filter by.",
         "parameters": [
           {
             "name": "elecID",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "The election identifier."
           },
           {
             "name": "key",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "The field to filter on."
           },
           {
             "name": "value",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "The value to filter by."
           },
           {
             "name": "resetCache",
             "in": "query",
-            "type": "string"
+            "type": "string",
+            "description": "Optional parameter to reset the cache."
           },
           {
             "name": "referer",
             "in": "header",
-            "type": "string"
+            "type": "string",
+            "description": "The referrer of the request."
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Filtered results data.",
+            "examples": {
+              "application/json": [
+                {
+                  "COD_ZONA": "1018",
+                  "GLOSA_ZONA": "Zone Name",
+                  "TIPO_ZONA": "Zone Type",
+                  "ORDEN_ZONA": "1"
+                }
+              ]
+            }
           }
         }
       }
     },
-    "/results/{elecID}/filter/{firstKey}/{firstValue}/{secondKey}/{secondValue}": {
+    "/result/{elecID}/filter/{firstKey}/{firstValue}/{secondKey}/{secondValue}": {
       "get": {
-        "description": "",
+        "description": "Retrieve data by filtering based on two specified keys and values. The firstKey and secondKey represent the fields to filter on, and firstValue and secondValue are the values to filter by.",
         "parameters": [
           {
             "name": "elecID",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "The election identifier."
           },
           {
             "name": "firstKey",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "The first field to filter on."
           },
           {
             "name": "firstValue",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "The first value to filter by."
           },
           {
             "name": "secondKey",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "The second field to filter on."
           },
           {
             "name": "secondValue",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "The second value to filter by."
           },
           {
             "name": "resetCache",
             "in": "query",
-            "type": "string"
+            "type": "string",
+            "description": "Optional parameter to reset the cache."
           },
           {
             "name": "referer",
             "in": "header",
-            "type": "string"
+            "type": "string",
+            "description": "The referrer of the request."
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Filtered results data.",
+            "examples": {
+              "application/json": [
+                {
+                  "COD_ZONA": "1018",
+                  "GLOSA_ZONA": "Zone Name",
+                  "TIPO_ZONA": "Zone Type",
+                  "ORDEN_ZONA": "1"
+                }
+              ]
+            }
           }
         }
       }
     },
     "/search/{elecID}/by/{complexId}": {
       "get": {
-        "description": "",
+        "description": "Retrieve results using the complexId, which is a composite ID of the zone (COD_ZONA + TIPO_ZONA).",
         "parameters": [
           {
             "name": "elecID",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "The election identifier."
           },
           {
             "name": "complexId",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "The composite ID of the zone."
           },
           {
             "name": "resetCache",
             "in": "query",
-            "type": "string"
+            "type": "string",
+            "description": "Optional parameter to reset the cache."
           },
           {
             "name": "referer",
             "in": "header",
-            "type": "string"
+            "type": "string",
+            "description": "The referrer of the request."
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Results data for the specified composite ID.",
+            "examples": {
+              "application/json": [
+                {
+                  "COD_ZONA": "1018",
+                  "GLOSA_ZONA": "Zone Name",
+                  "TIPO_ZONA": "Zone Type"
+                }
+              ]
+            }
           }
         }
       }
     },
     "/search/{elecID}/by/type/{typeZone}": {
       "get": {
-        "description": "",
+        "description": "Retrieve a list of elements separated by zone types. The typeZone parameter specifies the type of zone to filter by.",
         "parameters": [
           {
             "name": "elecID",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "The election identifier."
           },
           {
             "name": "typeZone",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "The type of zone to filter by."
           },
           {
             "name": "resetCache",
             "in": "query",
-            "type": "string"
+            "type": "string",
+            "description": "Optional parameter to reset the cache."
           },
           {
             "name": "referer",
             "in": "header",
-            "type": "string"
+            "type": "string",
+            "description": "The referrer of the request."
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "List of elements separated by zone types.",
+            "examples": {
+              "application/json": [
+                {
+                  "COD_ZONA": "1018",
+                  "GLOSA_ZONA": "Zone Name",
+                  "TIPO_ZONA": "Zone Type"
+                }
+              ]
+            }
           }
         }
       }
     },
     "/search/{elecID}/by/type/{typeZone}/{idZone}": {
       "get": {
-        "description": "",
+        "description": "Retrieve a list of elements separated by zone types and filtered by COD_ZONA.",
         "parameters": [
           {
             "name": "elecID",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "The election identifier."
           },
           {
             "name": "typeZone",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "The type of zone to filter by."
           },
           {
             "name": "idZone",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "The ID of the zone to filter by."
           },
           {
             "name": "resetCache",
             "in": "query",
-            "type": "string"
+            "type": "string",
+            "description": "Optional parameter to reset the cache."
           },
           {
             "name": "referer",
             "in": "header",
-            "type": "string"
+            "type": "string",
+            "description": "The referrer of the request."
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "List of elements filtered by zone type and ID.",
+            "examples": {
+              "application/json": [
+                {
+                  "COD_ZONA": "1018",
+                  "GLOSA_ZONA": "Zone Name",
+                  "TIPO_ZONA": "Zone Type"
+                }
+              ]
+            }
           }
         }
       }
