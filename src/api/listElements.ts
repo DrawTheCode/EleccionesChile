@@ -37,7 +37,7 @@ const REDIS_URL =
 async function setRegisterRedis(key: string, data: string) {
   if (REDIS_URL) {
     try {
-      const client = await createClient({ url: `redis://${REDIS_URL}` })
+      const client = await createClient({ url: REDIS_URL })
         .on('error', err => console.log('Redis Client Error', err))
         .connect();
       await client.set(key, data);
@@ -53,7 +53,7 @@ async function getRegisterRedis(key: string): Promise<string | null> {
   if (REDIS_URL) {
     try {
       console.log('estamos aca');
-      const client = await createClient({ url: `redis://${REDIS_URL}` })
+      const client = await createClient({ url: REDIS_URL })
         .on('error', err => console.log('Redis Client Error => ', err))
         .connect();
       const result = await client.get(key);
