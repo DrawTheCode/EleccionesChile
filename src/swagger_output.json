@@ -344,6 +344,7 @@
         }
       }
     },
+
     "/result/{elecID}/all": {
       "get": {
         "description": "Retrieve all the latest results data sent from SERVEL.",
@@ -372,23 +373,70 @@
           "200": {
             "description": "All results data for the specified election.",
             "examples": {
-              "application/json": [
-                {
-                  "COD_ZONA": "1018",
-                  "VOTOS": "1000",
-                  "GLOSA_ZONA": "Zone Name"
+              "application/json": {
+                "details": {
+                  "name": "VOTACION_1_10000_1115.TXT",
+                  "id": "100001115",
+                  "percent": 100,
+                  "hour": "11:15"
                 },
-                {
-                  "COD_ZONA": "1019",
-                  "VOTOS": "2000",
-                  "GLOSA_ZONA": "Another Zone Name"
-                }
-              ]
+                "data": [
+                  {
+                    "COD_ELEC": "1",
+                    "AMBITO": "7",
+                    "COD_AMBITO": "1",
+                    "COD_ZONA": "2740",
+                    "TIPO_ZONA": "C",
+                    "VOTOS": "1338"
+                  },
+                  {
+                    "COD_ELEC": "1",
+                    "AMBITO": "6",
+                    "COD_AMBITO": "1",
+                    "COD_ZONA": "10",
+                    "TIPO_ZONA": "L",
+                    "VOTOS": "5404"
+                  },
+                  {
+                    "COD_ELEC": "1",
+                    "AMBITO": "1",
+                    "COD_AMBITO": "389",
+                    "COD_ZONA": "7044",
+                    "TIPO_ZONA": "E",
+                    "VOTOS": "58606"
+                  },
+                  {
+                    "COD_ELEC": "1",
+                    "AMBITO": "4",
+                    "COD_AMBITO": "13970059",
+                    "COD_ZONA": "448",
+                    "TIPO_ZONA": "L",
+                    "VOTOS": "9"
+                  },
+                  {
+                    "COD_ELEC": "1",
+                    "AMBITO": "4",
+                    "COD_AMBITO": "15304953",
+                    "COD_ZONA": "262",
+                    "TIPO_ZONA": "L",
+                    "VOTOS": "0"
+                  },
+                  {
+                    "COD_ELEC": "1",
+                    "AMBITO": "3",
+                    "COD_AMBITO": "99",
+                    "COD_ZONA": "6005",
+                    "TIPO_ZONA": "D",
+                    "VOTOS": "56348"
+                  }
+                ]
+              }
             }
           }
         }
       }
     },
+
     "/result/{elecID}/filter/{key}/{value}": {
       "get": {
         "description": "Retrieve data by filtering based on the specified key and value. The key represents the field to filter on, and the value is the value to filter by.",
@@ -431,23 +479,62 @@
           "200": {
             "description": "Filtered results data.",
             "examples": {
-              "application/json": [
-                {
-                  "COD_ZONA": "1018",
-                  "VOTOS": "1000",
-                  "GLOSA_ZONA": "Zone Name"
+              "application/json": {
+                "details": {
+                  "name": "VOTACION_1_10000_1115.TXT",
+                  "id": "100001115",
+                  "percent": 100,
+                  "hour": "11:15"
                 },
-                {
-                  "COD_ZONA": "1019",
-                  "VOTOS": "2000",
-                  "GLOSA_ZONA": "Another Zone Name"
-                }
-              ]
+                "data": [
+                  {
+                    "COD_ELEC": "1",
+                    "AMBITO": "7",
+                    "COD_AMBITO": "1",
+                    "COD_ZONA": "2740",
+                    "TIPO_ZONA": "C",
+                    "VOTOS": "1338"
+                  },
+                  {
+                    "COD_ELEC": "1",
+                    "AMBITO": "7",
+                    "COD_AMBITO": "1",
+                    "COD_ZONA": "4113",
+                    "TIPO_ZONA": "Q",
+                    "VOTOS": "1543"
+                  },
+                  {
+                    "COD_ELEC": "1",
+                    "AMBITO": "7",
+                    "COD_AMBITO": "1",
+                    "COD_ZONA": "7063",
+                    "TIPO_ZONA": "E",
+                    "VOTOS": "3449"
+                  },
+                  {
+                    "COD_ELEC": "1",
+                    "AMBITO": "7",
+                    "COD_AMBITO": "1",
+                    "COD_ZONA": "15",
+                    "TIPO_ZONA": "L",
+                    "VOTOS": "3880"
+                  },
+                  {
+                    "COD_ELEC": "1",
+                    "AMBITO": "7",
+                    "COD_AMBITO": "1",
+                    "COD_ZONA": "37",
+                    "TIPO_ZONA": "L",
+                    "VOTOS": "5890"
+                  }
+                ]
+              }
             }
           }
         }
       }
     },
+
     "/result/{elecID}/filter/{firstKey}/{firstValue}/{secondKey}/{secondValue}": {
       "get": {
         "description": "Retrieve data by filtering based on two specified keys and values. The firstKey and secondKey represent the fields to filter on, and firstValue and secondValue are the values to filter by.",
