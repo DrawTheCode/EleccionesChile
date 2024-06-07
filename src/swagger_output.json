@@ -26,13 +26,25 @@
             "examples": {
               "application/json": [
                 { "id": "G", "value": "Global" },
-                { "id": "L", "value": "Local" }
+                { "id": "P", "value": "País" },
+                { "id": "R", "value": "Región" },
+                { "id": "Q", "value": "Provincia" },
+                { "id": "S", "value": "Circunscripción Senatorial" },
+                { "id": "D", "value": "Distrito" },
+                { "id": "V", "value": "Circunscripción Provincial" },
+                { "id": "C", "value": "Comuna" },
+                { "id": "E", "value": "Circunscripción Electoral" },
+                { "id": "I", "value": "Distribución" },
+                { "id": "N", "value": "Continente" },
+                { "id": "U", "value": "Consulados" },
+                { "id": "L", "value": "Local Votación" }
               ]
             }
           }
         }
       }
     },
+
     "/def/elec": {
       "get": {
         "description": "Retrieve a list of election types with their IDs.",
@@ -49,14 +61,32 @@
             "description": "A list of election types with their IDs.",
             "examples": {
               "application/json": [
+                { "id": "A", "name": "Alcaldes" },
+                { "id": "C", "name": "Concejales" },
+                { "id": "D", "name": "Diputados" },
+                { "id": "S", "name": "Senadores" },
+                { "id": "P", "name": "Presidente" },
+                { "id": "R", "name": "Consejeros Regionales" },
+                { "id": "B", "name": "Primarias Acaldes" },
+                { "id": "E", "name": "Primarias Diputados" },
+                { "id": "T", "name": "Primarias Senadores" },
+                { "id": "Q", "name": "Primarias Presidencial" },
                 { "id": "N", "name": "Votación Plebiscito Constitucional" },
-                { "id": "M", "name": "Municipal Election" }
+                { "id": "G", "name": "Primarias Gobemadores Regionales" },
+                { "id": "H", "name": "Gobernadores Regionales" },
+                { "id": "I", "name": "GORE Segunda Votación" },
+                { "id": "N", "name": "Consejo Constitucional" },
+                {
+                  "id": "V",
+                  "name": "Consejo Constitucional de Pueblo Indígena"
+                }
               ]
             }
           }
         }
       }
     },
+
     "/def/ambit": {
       "get": {
         "description": "Retrieve a list of voting scopes.",
@@ -74,13 +104,19 @@
             "examples": {
               "application/json": [
                 { "id": 1, "name": "Votación Pactos" },
-                { "id": 2, "name": "Votación Individual" }
+                { "id": 2, "name": "Votación Sub Pactos" },
+                { "id": 3, "name": "Votación Partidos" },
+                { "id": 4, "name": "Votación Candidatos" },
+                { "id": 5, "name": "Votos Nulos" },
+                { "id": 6, "name": "Votos en Blanco" },
+                { "id": 7, "name": "Votos Válidamente Emitidos" }
               ]
             }
           }
         }
       }
     },
+
     "/check/files": {
       "get": {
         "description": "List the files copied on the server at the top level. This does not include decompressed files.",
@@ -103,14 +139,31 @@
             "description": "A list of copied files.",
             "examples": {
               "application/json": [
-                { "filename": "file1.txt", "size": "15MB", "status": "copied" },
-                { "filename": "file2.txt", "size": "20MB", "status": "copied" }
+                "respaldoPrimarias2024Ensayo1-20240509",
+                "VOTACION_2_02849_1030.TXT.ZIP",
+                "VOTACION_2_05584_1045.TXT.ZIP",
+                "Escenario_ZonasPadre_001008.txt",
+                "Escenario_Pactos_001008.txt",
+                "Escenario_Elecciones_001008.txt",
+                "20231217",
+                "VOTACION_1_07589_1100.TXT.ZIP",
+                "Escenario_SubPactos_001008.txt",
+                "Escenario_Zonas_001008.txt",
+                "VOTACION_1_10000_1115.TXT.ZIP",
+                "VOTACION_1_02922_1030.TXT.ZIP",
+                "VOTACION_1_05622_1045.TXT.ZIP",
+                "Escenario_Partidos_001008.txt",
+                "respaldoPrimarias2024Ensayo2-20240525",
+                "Escenario_Candidatos_001008.txt",
+                "VOTACION_2_07699_1100.TXT.ZIP",
+                "VOTACION_2_10000_1115.TXT.ZIP"
               ]
             }
           }
         }
       }
     },
+
     "/check/not-copy": {
       "get": {
         "description": "Show a list of files that have not been copied between the local server and the one provided to SERVEL.",
@@ -133,22 +186,16 @@
             "description": "A list of files not copied.",
             "examples": {
               "application/json": [
-                {
-                  "filename": "file3.txt",
-                  "size": "10MB",
-                  "status": "not copied"
-                },
-                {
-                  "filename": "file4.txt",
-                  "size": "5MB",
-                  "status": "not copied"
-                }
+                "respaldoPrimarias2024Ensayo1-20240509",
+                "20231217",
+                "respaldoPrimarias2024Ensayo2-20240525"
               ]
             }
           }
         }
       }
     },
+
     "/check/scenery/{zone}": {
       "get": {
         "description": "List the details of files provided by SERVEL from local files, showing details such as file metadata, not the content.",
