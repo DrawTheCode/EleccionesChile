@@ -5,23 +5,26 @@ import {
   makeGenericStructure,
 } from './genericFunctions.js';
 
+const elecID = 1; // Set the desired ElecID here
+
 const getData = async url => {
   if (url) {
     const results = await fetch(url);
     return (await results.json()) ?? null;
   }
 };
+
 const globalResults = await getData(
-  'https://apiservel.latercera.com/api/search/by/type/g',
+  `https://apiservel.latercera.com/api/search/${elecID}/by/type/g`,
 );
 const countryResults = await getData(
-  'https://apiservel.latercera.com/api/search/by/type/p',
+  `https://apiservel.latercera.com/api/search/${elecID}/by/type/p`,
 );
 const continentResult = await getData(
-  'https://apiservel.latercera.com/api/search/by/type/n',
+  `https://apiservel.latercera.com/api/search/${elecID}/by/type/n`,
 );
 const regionResult = await getData(
-  'https://apiservel.latercera.com/api/search/by/type/q',
+  `https://apiservel.latercera.com/api/search/${elecID}/by/type/q`,
 );
 
 function makeResult(data, exclude = false) {
@@ -60,7 +63,7 @@ function makeResult(data, exclude = false) {
   }
 }
 
-const makeConfigData = (idZone, zoneName, qtyMesas, typeID) => {
+const makeConfigData = (elecID, idZone, zoneName, qtyMesas, typeID) => {
   if (typeID.match(/^(g|p|n|q)$/) !== null) {
     const showType =
       typeID === 'p' ? 'País' : typeID === 'q' ? 'Provincia' : 'Continente';
@@ -173,7 +176,6 @@ const makeDisplayFetch = async (divID, config) => {
       if (header.length === 0) {
         header = false;
       }
-      //console.log('ESTAMOS EN =>',divID,' TENEMOS=> ',await tempResult);
       makeGenericStructure(divID, await tempResult.data, header, footer);
     }
   }
@@ -230,65 +232,65 @@ makeDisplayFetch('international-results', configExtr);
 makeDisplayFetch('international-results-expanded', configExtrExpanded);
 makeDisplayFetch(
   'international-results-francia',
-  makeConfigData('8024', 'FRANCIA', 12, 'p'),
+  makeConfigData(elecID, '8024', 'FRANCIA', 12, 'p'),
 );
 makeDisplayFetch(
   'international-results-espana',
-  makeConfigData('8019', 'ESPAÑA', 37, 'p'),
+  makeConfigData(elecID, '8019', 'ESPAÑA', 37, 'p'),
 );
 makeDisplayFetch(
   'international-results-italia',
-  makeConfigData('8034', 'ITALIA', 7, 'p'),
+  makeConfigData(elecID, '8034', 'ITALIA', 7, 'p'),
 );
 makeDisplayFetch(
   'international-results-kenia',
-  makeConfigData('8038', 'KENIA', 1, 'p'),
+  makeConfigData(elecID, '8038', 'KENIA', 1, 'p'),
 );
 makeDisplayFetch(
   'international-results-asia',
-  makeConfigData('15003', 'ASIA', 18, 'n'),
+  makeConfigData(elecID, '15003', 'ASIA', 18, 'n'),
 );
 makeDisplayFetch(
   'international-results-libano',
-  makeConfigData('8016', 'LIBANO', 1, 'p'),
+  makeConfigData(elecID, '8016', 'LIBANO', 1, 'p'),
 );
 makeDisplayFetch(
   'international-results-china',
-  makeConfigData('8054', 'REPUBLICA POPULAR CHINA', 4, 'p'),
+  makeConfigData(elecID, '8054', 'REPUBLICA POPULAR CHINA', 4, 'p'),
 );
 makeDisplayFetch(
   'international-results-nuevazelanda',
-  makeConfigData('8044', 'NUEVA ZELANDA', 8, 'p'),
+  makeConfigData(elecID, '8044', 'NUEVA ZELANDA', 8, 'p'),
 );
 makeDisplayFetch(
   'international-results-brasil',
-  makeConfigData('8006', 'BRASIL', 8, 'p'),
+  makeConfigData(elecID, '8006', 'BRASIL', 8, 'p'),
 );
 makeDisplayFetch(
   'international-results-africa',
-  makeConfigData('15001', 'AFRICA', 4, 'n'),
+  makeConfigData(elecID, '15001', 'AFRICA', 4, 'n'),
 );
 makeDisplayFetch(
   'international-results-europa',
-  makeConfigData('15004', 'EUROPA', 347, 'n'),
+  makeConfigData(elecID, '15004', 'EUROPA', 347, 'n'),
 );
 makeDisplayFetch(
   'international-results-oceania',
-  makeConfigData('15005', 'OCEANIA', 29, 'n'),
+  makeConfigData(elecID, '15005', 'OCEANIA', 29, 'n'),
 );
 makeDisplayFetch(
   'national-final-arica',
-  makeConfigData('4151', 'ARICA', 492, 'q'),
+  makeConfigData(elecID, '4151', 'ARICA', 492, 'q'),
 );
 makeDisplayFetch(
   'national-final-valparaiso',
-  makeConfigData('4051', 'VALPARAISO', 1832, 'q'),
+  makeConfigData(elecID, '4051', 'VALPARAISO', 1832, 'q'),
 );
 makeDisplayFetch(
   'national-final-concepcion',
-  makeConfigData('4081', 'CONCEPCIÓN', 2203, 'q'),
+  makeConfigData(elecID, '4081', 'CONCEPCIÓN', 2203, 'q'),
 );
 makeDisplayFetch(
   'national-final-results',
-  makeConfigData('8056', '', 39390, 'p'),
+  makeConfigData(elecID, '8056', '', 39390, 'p'),
 );

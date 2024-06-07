@@ -24,7 +24,10 @@
           "200": {
             "description": "A list of zone types with their IDs.",
             "examples": {
-              "application/json": [{ "id": "G", "value": "Global" }]
+              "application/json": [
+                { "id": "G", "value": "Global" },
+                { "id": "L", "value": "Local" }
+              ]
             }
           }
         }
@@ -46,7 +49,8 @@
             "description": "A list of election types with their IDs.",
             "examples": {
               "application/json": [
-                { "id": "N", "name": "Votación Plebiscito Constitucional" }
+                { "id": "N", "name": "Votación Plebiscito Constitucional" },
+                { "id": "M", "name": "Municipal Election" }
               ]
             }
           }
@@ -68,7 +72,10 @@
           "200": {
             "description": "A list of voting scopes.",
             "examples": {
-              "application/json": [{ "id": 1, "name": "Votación Pactos" }]
+              "application/json": [
+                { "id": 1, "name": "Votación Pactos" },
+                { "id": 2, "name": "Votación Individual" }
+              ]
             }
           }
         }
@@ -93,7 +100,13 @@
         ],
         "responses": {
           "200": {
-            "description": "A list of copied files."
+            "description": "A list of copied files.",
+            "examples": {
+              "application/json": [
+                { "filename": "file1.txt", "size": "15MB", "status": "copied" },
+                { "filename": "file2.txt", "size": "20MB", "status": "copied" }
+              ]
+            }
           }
         }
       }
@@ -117,7 +130,21 @@
         ],
         "responses": {
           "200": {
-            "description": "A list of files not copied."
+            "description": "A list of files not copied.",
+            "examples": {
+              "application/json": [
+                {
+                  "filename": "file3.txt",
+                  "size": "10MB",
+                  "status": "not copied"
+                },
+                {
+                  "filename": "file4.txt",
+                  "size": "5MB",
+                  "status": "not copied"
+                }
+              ]
+            }
           }
         }
       }
@@ -148,7 +175,21 @@
         ],
         "responses": {
           "200": {
-            "description": "Details of files for the specified zone."
+            "description": "Details of files for the specified zone.",
+            "examples": {
+              "application/json": [
+                {
+                  "filename": "zone1_file.txt",
+                  "size": "15MB",
+                  "uploaded_at": "2024-06-01T12:00:00Z"
+                },
+                {
+                  "filename": "zone1_file2.txt",
+                  "size": "20MB",
+                  "uploaded_at": "2024-06-01T12:00:00Z"
+                }
+              ]
+            }
           }
         }
       }
@@ -188,6 +229,13 @@
                   "COD_ZONA": "789",
                   "CAN_ORDEN": "1",
                   "GLOSA_CAND": "Candidate Name"
+                },
+                {
+                  "COD_CAND": "124",
+                  "COD_ELEC": "457",
+                  "COD_ZONA": "790",
+                  "CAN_ORDEN": "2",
+                  "GLOSA_CAND": "Another Candidate"
                 }
               ]
             }
@@ -236,6 +284,12 @@
                   "GLOSA_ZONA": "Zone Name",
                   "TIPO_ZONA": "Zone Type",
                   "ORDEN_ZONA": "1"
+                },
+                {
+                  "COD_ZONA": "1019",
+                  "GLOSA_ZONA": "Another Zone Name",
+                  "TIPO_ZONA": "Another Zone Type",
+                  "ORDEN_ZONA": "2"
                 }
               ]
             }
@@ -243,7 +297,7 @@
         }
       }
     },
-    "/result/{elecID}/all": {
+    "/results/{elecID}/all": {
       "get": {
         "description": "Retrieve all the latest results data sent from SERVEL.",
         "parameters": [
@@ -269,12 +323,26 @@
         ],
         "responses": {
           "200": {
-            "description": "All results data for the specified election."
+            "description": "All results data for the specified election.",
+            "examples": {
+              "application/json": [
+                {
+                  "COD_ZONA": "1018",
+                  "VOTOS": "1000",
+                  "GLOSA_ZONA": "Zone Name"
+                },
+                {
+                  "COD_ZONA": "1019",
+                  "VOTOS": "2000",
+                  "GLOSA_ZONA": "Another Zone Name"
+                }
+              ]
+            }
           }
         }
       }
     },
-    "/result/{elecID}/filter/{key}/{value}": {
+    "/results/{elecID}/filter/{key}/{value}": {
       "get": {
         "description": "Retrieve data by filtering based on the specified key and value. The key represents the field to filter on, and the value is the value to filter by.",
         "parameters": [
@@ -319,9 +387,13 @@
               "application/json": [
                 {
                   "COD_ZONA": "1018",
-                  "GLOSA_ZONA": "Zone Name",
-                  "TIPO_ZONA": "Zone Type",
-                  "ORDEN_ZONA": "1"
+                  "VOTOS": "1000",
+                  "GLOSA_ZONA": "Zone Name"
+                },
+                {
+                  "COD_ZONA": "1019",
+                  "VOTOS": "2000",
+                  "GLOSA_ZONA": "Another Zone Name"
                 }
               ]
             }
@@ -329,7 +401,7 @@
         }
       }
     },
-    "/result/{elecID}/filter/{firstKey}/{firstValue}/{secondKey}/{secondValue}": {
+    "/results/{elecID}/filter/{firstKey}/{firstValue}/{secondKey}/{secondValue}": {
       "get": {
         "description": "Retrieve data by filtering based on two specified keys and values. The firstKey and secondKey represent the fields to filter on, and firstValue and secondValue are the values to filter by.",
         "parameters": [
@@ -388,9 +460,13 @@
               "application/json": [
                 {
                   "COD_ZONA": "1018",
-                  "GLOSA_ZONA": "Zone Name",
-                  "TIPO_ZONA": "Zone Type",
-                  "ORDEN_ZONA": "1"
+                  "VOTOS": "1000",
+                  "GLOSA_ZONA": "Zone Name"
+                },
+                {
+                  "COD_ZONA": "1019",
+                  "VOTOS": "2000",
+                  "GLOSA_ZONA": "Another Zone Name"
                 }
               ]
             }
@@ -438,6 +514,11 @@
                   "COD_ZONA": "1018",
                   "GLOSA_ZONA": "Zone Name",
                   "TIPO_ZONA": "Zone Type"
+                },
+                {
+                  "COD_ZONA": "1019",
+                  "GLOSA_ZONA": "Another Zone Name",
+                  "TIPO_ZONA": "Another Zone Type"
                 }
               ]
             }
@@ -485,6 +566,11 @@
                   "COD_ZONA": "1018",
                   "GLOSA_ZONA": "Zone Name",
                   "TIPO_ZONA": "Zone Type"
+                },
+                {
+                  "COD_ZONA": "1019",
+                  "GLOSA_ZONA": "Another Zone Name",
+                  "TIPO_ZONA": "Another Zone Type"
                 }
               ]
             }
@@ -539,6 +625,11 @@
                   "COD_ZONA": "1018",
                   "GLOSA_ZONA": "Zone Name",
                   "TIPO_ZONA": "Zone Type"
+                },
+                {
+                  "COD_ZONA": "1019",
+                  "GLOSA_ZONA": "Another Zone Name",
+                  "TIPO_ZONA": "Another Zone Type"
                 }
               ]
             }
