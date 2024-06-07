@@ -1,306 +1,370 @@
-import { readFileSync } from "fs-extra";
-import { filterResultsFile, filterSchemasFile } from "./checkSchemas";
-import { FatherZoneSchema, ZoneSchema, candidateSchema, electionsSchema, pactSchema, partiesSchema, subPactSchema } from "../types/settings";
-import { dataDisplay, makeFileInputCamelCase } from "../utils/genericFunctions";
+import { readFileSync } from 'fs-extra';
+import { filterResultsFile, filterSchemasFile } from './checkSchemas';
+import {
+  FatherZoneSchema,
+  ZoneSchema,
+  candidateSchema,
+  electionsSchema,
+  pactSchema,
+  partiesSchema,
+  subPactSchema,
+} from '../types/settings';
+import { dataDisplay, makeFileInputCamelCase } from '../utils/genericFunctions';
 
 const localPath = dataDisplay();
 
-
-function makeCurrentSchema(listAtr:string,type:string): ZoneSchema | FatherZoneSchema | pactSchema | subPactSchema | partiesSchema | electionsSchema | candidateSchema | null{
+function makeCurrentSchema(
+  listAtr: string,
+  type: string,
+):
+  | ZoneSchema
+  | FatherZoneSchema
+  | pactSchema
+  | subPactSchema
+  | partiesSchema
+  | electionsSchema
+  | candidateSchema
+  | null {
   const item = listAtr.split(';');
   const tempType = type.toLowerCase();
   switch (tempType) {
     case 'candidatos':
       return {
-        COD_CAND:      item[0] as unknown as number,
-        COD_ELEC:      item[1] as unknown as number,
-        COD_ZONA:      item[2] as unknown as number,
-        CAN_ORDEN:     item[3] as unknown as number,
-        GLOSA_CAND:    item[4],
-        COD_PART:      item[5] as unknown as number,
-        COD_PACTO:     item[6] as unknown as number,
-        COD_SUBP:      item[7] as unknown as number,
-        COD_IND:       item[8],
-        CAN_PAGINA:    item[9] as unknown as number,
-        GLOSA_NOMBRE:  item[10],
-        GLOSA_APELLIDO:item[11],
-        COD_GENERO:    item[12]
-      }
+        COD_CAND: item[0] as unknown as number,
+        COD_ELEC: item[1] as unknown as number,
+        COD_ZONA: item[2] as unknown as number,
+        CAN_ORDEN: item[3] as unknown as number,
+        GLOSA_CAND: item[4],
+        COD_PART: item[5] as unknown as number,
+        COD_PACTO: item[6] as unknown as number,
+        COD_SUBP: item[7] as unknown as number,
+        COD_IND: item[8],
+        CAN_PAGINA: item[9] as unknown as number,
+        GLOSA_NOMBRE: item[10],
+        GLOSA_APELLIDO: item[11],
+        COD_GENERO: item[12],
+      };
     case 'elecciones':
       return {
-        COD_ELEC:   item[0] as unknown as number,
+        COD_ELEC: item[0] as unknown as number,
         GLOSA_ELEC: item[1],
-        ELE_FECHA:  item[2],
-        TIPO_ZONA:  item[3],
-        TIPO_ELECCION:item[4],
-        TOTAL_ELECTORES:item[5] as unknown as number
-      }
+        ELE_FECHA: item[2],
+        TIPO_ZONA: item[3],
+        TIPO_ELECCION: item[4],
+        TOTAL_ELECTORES: item[5] as unknown as number,
+      };
     case 'pactos':
       return {
         COD_PACTO: item[0] as unknown as number,
-        LETRA_PACTO:item[1],
-        GLOSA_PACTO:item[2]
-      }
+        LETRA_PACTO: item[1],
+        GLOSA_PACTO: item[2],
+      };
     case 'partidos':
       return {
         COD_PART: item[0] as unknown as number,
         GLOSA_PART: item[1],
-        SIGLA_PART: item[2]
-      }
+        SIGLA_PART: item[2],
+      };
     case 'subpactos':
       return {
         COD_SUBP: item[0] as unknown as number,
         LETRA_PACTO: item[1],
-        GLOSA_SUBP: item[2]
-      }
+        GLOSA_SUBP: item[2],
+      };
     case 'zonas':
       return {
-        COD_ZONA:item[0] as unknown as number,
+        COD_ZONA: item[0] as unknown as number,
         GLOSA_ZONA: item[1],
         TIPO_ZONA: item[2],
-        ORDEN_ZONA: item[3] as unknown as number
-      }
+        ORDEN_ZONA: item[3] as unknown as number,
+      };
     case 'zonaspadre':
       return {
         COD_ZONA: item[0] as unknown as number,
         TIPO_ZONA: item[1],
         COD_ZONA_PAD: item[2] as unknown as number,
-        TIPO_ZONA_PAD: item[3]
-      }
+        TIPO_ZONA_PAD: item[3],
+      };
     default:
       return null;
   }
 }
 
-function makeVoteSchema(reconstructorElement:string[]){
+function makeVoteSchema(reconstructorElement: string[]) {
   return {
-    COD_ELEC:  reconstructorElement[0],
-    AMBITO:    reconstructorElement[1],
-    COD_AMBITO:reconstructorElement[2],
-    COD_ZONA:  reconstructorElement[3],
+    COD_ELEC: reconstructorElement[0],
+    AMBITO: reconstructorElement[1],
+    COD_AMBITO: reconstructorElement[2],
+    COD_ZONA: reconstructorElement[3],
     TIPO_ZONA: reconstructorElement[4],
-    VOTOS:     reconstructorElement[5]
-  }
+    VOTOS: reconstructorElement[5],
+  };
 }
 
-
-const getScenarySchema = async (filter:string) => {
+const getScenarySchema = async (filter: string) => {
   const tempResult = await filterSchemasFile(makeFileInputCamelCase(filter));
-  if(tempResult.length>0 && localPath){
-    return readFileSync(`${localPath}${tempResult[0].name}`,{ encoding: 'utf8' });
+  if (tempResult.length > 0 && localPath) {
+    return readFileSync(`${localPath}${tempResult[0].name}`, {
+      encoding: 'utf8',
+    });
   }
   return null;
-}
+};
 
-
-export const getResultOneFilter = async (key:string,value:string|number,elecID:number) => {
-  if(key === 'TIPO_ZONA' && Number(value)){
-    return {error:'El tipo zona debe ser una letra.'};
+export const getResultOneFilter = async (
+  key: string,
+  value: string | number,
+  elecID: number,
+) => {
+  if (key === 'TIPO_ZONA' && Number(value)) {
+    return { error: 'El tipo zona debe ser una letra.' };
   }
   key = key.toUpperCase();
-  const listKey = ['COD_ELEC','AMBITO','COD_AMBITO','COD_ZONA','TIPO_ZONA','VOTOS'];
-  const tempValue = key !=='TIPO_ZONA' ? value as number : (value as string).toUpperCase();
-  if(listKey.includes(key)){
-    if(key !== 'TIPO_ZONA' && !Number(value)){
-      return {error:`El valor de ${key} debe ser un número.`};
+  const listKey = [
+    'COD_ELEC',
+    'AMBITO',
+    'COD_AMBITO',
+    'COD_ZONA',
+    'TIPO_ZONA',
+    'VOTOS',
+  ];
+  const tempValue =
+    key !== 'TIPO_ZONA' ? (value as number) : (value as string).toUpperCase();
+  if (listKey.includes(key)) {
+    if (key !== 'TIPO_ZONA' && !Number(value)) {
+      return { error: `El valor de ${key} debe ser un número.` };
     }
     const result = await getResultsSchema(elecID);
-    if(result && result?.data!==null){
-      const resultList = result.data.filter((item:any)=> {
-        return item[key]===tempValue;
+    if (result && result?.data !== null) {
+      const resultList = result.data.filter((item: any) => {
+        return item[key] === tempValue;
       });
-      return {details:result.details,data:resultList}
+      return { details: result.details, data: resultList };
     }
   }
   return null;
-}
+};
 
-export const getResultTwoFilter = async (elecID:number,firstKey:string,firstValue:string|number,secondKey:string,secondValue:string|number) => {
+export const getResultTwoFilter = async (
+  elecID: number,
+  firstKey: string,
+  firstValue: string | number,
+  secondKey: string,
+  secondValue: string | number,
+) => {
   firstKey = firstKey.toUpperCase();
-  secondKey =secondKey.toUpperCase();
-  const listKey = ['COD_ELEC','AMBITO','COD_AMBITO','COD_ZONA','TIPO_ZONA','VOTOS'];
-  const tempFirstValue = firstKey!=='TIPO_ZONA' ? firstValue as number : (firstValue as string).toUpperCase();
-  const tempSecondValue = secondKey!=='TIPO_ZONA' ? secondValue as number : (secondValue as string).toUpperCase();
-  if(listKey.includes(firstKey) && listKey.includes(secondKey)){
+  secondKey = secondKey.toUpperCase();
+  const listKey = [
+    'COD_ELEC',
+    'AMBITO',
+    'COD_AMBITO',
+    'COD_ZONA',
+    'TIPO_ZONA',
+    'VOTOS',
+  ];
+  const tempFirstValue =
+    firstKey !== 'TIPO_ZONA'
+      ? (firstValue as number)
+      : (firstValue as string).toUpperCase();
+  const tempSecondValue =
+    secondKey !== 'TIPO_ZONA'
+      ? (secondValue as number)
+      : (secondValue as string).toUpperCase();
+  if (listKey.includes(firstKey) && listKey.includes(secondKey)) {
     const result = await getResultsSchema(elecID);
-    if(result && result?.data!==null){
-      if(firstKey==='COD_ZONA' && secondKey==='TIPO_ZONA'){
+    if (result && result?.data !== null) {
+      if (firstKey === 'COD_ZONA' && secondKey === 'TIPO_ZONA') {
         const tempResultZone = await getZoneInfo('zonas');
-        if(tempResultZone.length>0){
-          result.details.zone_details = tempResultZone.filter((item:any)=>{
-            return(item[firstKey]===tempFirstValue && item[secondKey] === tempSecondValue);
+        if (tempResultZone.length > 0) {
+          result.details.zone_details = tempResultZone.filter((item: any) => {
+            return (
+              item[firstKey] === tempFirstValue &&
+              item[secondKey] === tempSecondValue
+            );
           });
         }
       }
-      const resultList = result.data.filter((item:any)=> {
-        return(item[firstKey]===tempFirstValue && item[secondKey] === tempSecondValue);
+      const resultList = result.data.filter((item: any) => {
+        return (
+          item[firstKey] === tempFirstValue &&
+          item[secondKey] === tempSecondValue
+        );
       });
-      return {details:result.details,data:resultList}
+      return { details: result.details, data: resultList };
     }
   }
   return null;
-}
+};
 
-export const getResultsSchema = async (elecID:number)  => {
+export const getResultsSchema = async (elecID: number) => {
   const tempResult = await filterResultsFile(elecID);
-  if(tempResult.length>0 && localPath){
+  if (tempResult.length > 0 && localPath) {
     const details = tempResult[0];
-    const result = await readFileSync(`${localPath}unzip/${tempResult[0].name}`,{ encoding: 'utf8' });
+    const result = await readFileSync(
+      `${localPath}unzip/${tempResult[0].name}`,
+      { encoding: 'utf8' },
+    );
     const listOfLines = await result.split(/;(\r\n|\r|\n)/);
-    let data:any = [];
-    for (let line = 0; line < await listOfLines.length; line++) {
-      if(line && listOfLines[line].match(/;/)){
+    let data: any = [];
+    for (let line = 0; line < (await listOfLines.length); line++) {
+      if (line && listOfLines[line].match(/;/)) {
         const reconstructorElement = listOfLines[line].split(';');
-        if(reconstructorElement.length===6){
+        if (reconstructorElement.length === 6) {
           const currentElement = makeVoteSchema(reconstructorElement);
           data.push(currentElement);
         }
       }
     }
-    return({details,data});
+    return { details, data };
   }
   return null;
-}
+};
 
-export const getSearchSchema = async (elecID:number)  => {
+export const getSearchSchema = async (elecID: number) => {
   const tempResult = await filterResultsFile(elecID);
-  if(tempResult.length>0 && localPath){
+  if (tempResult.length > 0 && localPath) {
     const details = tempResult[0];
-    const result = await readFileSync(`${localPath}unzip/${tempResult[0].name}`,{ encoding: 'utf8' });
+    const result = await readFileSync(
+      `${localPath}unzip/${tempResult[0].name}`,
+      { encoding: 'utf8' },
+    );
     const listOfLines = result.split(/;(\r\n|\r|\n)/);
-    const data:any = [];
+    const data: any = [];
     listOfLines.forEach(line => {
-      if(line && line.match(/;/)){
+      if (line && line.match(/;/)) {
         const reconstructorElement = line.split(';');
-        if(reconstructorElement.length===6){
+        if (reconstructorElement.length === 6) {
           const currentElement = makeVoteSchema(reconstructorElement);
           const tempName = `${currentElement.COD_ZONA}${currentElement.TIPO_ZONA}`;
-          if(data[tempName]===undefined){
-            data[tempName] = []
+          if (data[tempName] === undefined) {
+            data[tempName] = [];
           }
-          data[tempName].push(
-            {
-              AMBITO:currentElement.AMBITO,
-              COD_AMBITO:currentElement.COD_AMBITO,
-              VOTOS:currentElement.VOTOS
-            }
-          );
+          data[tempName].push({
+            AMBITO: currentElement.AMBITO,
+            COD_AMBITO: currentElement.COD_AMBITO,
+            VOTOS: currentElement.VOTOS,
+          });
         }
       }
-    })
-    return {details,data}
+    });
+    return { details, data };
   }
   return null;
-}
+};
 
-export const getSearchByTypeSchema = async (elecID:number)  => {
+export const getSearchByTypeSchema = async (elecID: number) => {
   const tempResult = await filterResultsFile(elecID);
-  if(await tempResult.length>0 && localPath){
+  if ((await tempResult.length) > 0 && localPath) {
     const details = await tempResult[0];
-    const result = await readFileSync(`${localPath}unzip/${tempResult[0].name}`,{ encoding: 'utf8' });
+    const result = await readFileSync(
+      `${localPath}unzip/${tempResult[0].name}`,
+      { encoding: 'utf8' },
+    );
     const listOfLines = await result.split(/;(\r\n|\r|\n)/);
-    let data:any = [];
+    let data: any = [];
     await listOfLines.forEach(line => {
-      if(line && line.match(/;/)){
+      if (line && line.match(/;/)) {
         const reconstructorElement = line.split(';');
-        if(reconstructorElement.length===6){
+        if (reconstructorElement.length === 6) {
           const currentElement = makeVoteSchema(reconstructorElement);
           const tempName = `${currentElement.TIPO_ZONA}`;
           const tempIdZone = `${currentElement.COD_ZONA}`;
-          if(data[tempName]===undefined){
+          if (data[tempName] === undefined) {
             data[tempName] = [];
           }
-          if(data[tempName][tempIdZone]===undefined){
+          if (data[tempName][tempIdZone] === undefined) {
             //console.log('no existe =>',`data[${tempName}][${tempIdZone}]`);
             data[tempName][tempIdZone] = [];
           }
-          data[tempName][tempIdZone].push(
-            {
-              AMBITO:currentElement.AMBITO,
-              COD_AMBITO:currentElement.COD_AMBITO,
-              VOTOS:currentElement.VOTOS
-            }
-          );
+          data[tempName][tempIdZone].push({
+            AMBITO: currentElement.AMBITO,
+            COD_AMBITO: currentElement.COD_AMBITO,
+            VOTOS: currentElement.VOTOS,
+          });
         }
       }
-    })
-    return await({details,data});
+    });
+    return await { details, data };
   }
   return null;
-}
+};
 
-export const getZoneInfo = async (filter:string) => {
+export const getZoneInfo = async (filter: string) => {
   filter = makeFileInputCamelCase(filter);
   const result = await getScenarySchema(filter);
-  const tempReturn: any = []
-  if(result && result.length>0){
+  const tempReturn: any = [];
+  if (result && result.length > 0) {
     const listOfLines = result.split(/;(\r\n|\r|\n)/);
     listOfLines.forEach(line => {
-      if(line && line.match(/;/)){
-        const reconstructorElement = makeCurrentSchema(line,filter);
-        if(reconstructorElement){
+      if (line && line.match(/;/)) {
+        const reconstructorElement = makeCurrentSchema(line, filter);
+        if (reconstructorElement) {
           tempReturn.push(reconstructorElement);
         }
       }
-    })
+    });
   }
   return tempReturn;
-}
+};
 
-export const getZoneInfoFilterByType = async (filter:string,type:string) => {
+export const getZoneInfoFilterByType = async (filter: string, type: string) => {
   filter = makeFileInputCamelCase(filter);
   const result = await getScenarySchema(filter);
-  const tempReturn: any = []
-  if(result && result.length>0){
+  const tempReturn: any = [];
+  if (result && result.length > 0) {
     const listOfLines = result.split(/;(\r\n|\r|\n)/);
     listOfLines.forEach(line => {
-      if(line && line.match(/;/)){
-        const reconstructorElement = makeCurrentSchema(line,filter);
-        if(reconstructorElement){
+      if (line && line.match(/;/)) {
+        const reconstructorElement = makeCurrentSchema(line, filter);
+        if (reconstructorElement) {
           tempReturn.push(reconstructorElement);
         }
       }
-    })
+    });
   }
-  const finalResult = tempReturn.filter((item: ZoneSchema)=>{
-    return(item['TIPO_ZONA']===type.toLocaleUpperCase());
+  const finalResult = tempReturn.filter((item: ZoneSchema) => {
+    return item['TIPO_ZONA'] === type.toLocaleUpperCase();
   });
   return finalResult;
-}
+};
 
-export const getSearch = async (key:string,elecID:number) => {
+export const getSearch = async (key: string, elecID: number) => {
   key = key.toUpperCase();
-  if(key.match(/.*(G|P|R|Q|S|D|V|C|E|I|N|U|L)$/)!==null){
+  if (key.match(/.*(G|P|R|Q|S|D|V|C|E|I|N|U|L)$/) !== null) {
     const result = await getSearchSchema(elecID);
-    if(result && result?.data!==null){
-      return {details:result.details,data:result.data[key]}
+    if (result && result?.data !== null) {
+      return { details: result.details, data: result.data[key] };
     }
   }
   return null;
-}
+};
 
-export const getSearchByType = async (key:string,elecID:number) => {
+export const getSearchByType = async (key: string, elecID: number) => {
   key = key.toUpperCase();
-  if(key.match(/^(G|P|R|Q|S|D|V|C|E|I|N|U|L)$/)!==null){
+  if (key.match(/^(G|P|R|Q|S|D|V|C|E|I|N|U|L)$/) !== null) {
     const result = await getSearchByTypeSchema(elecID);
-    if(result && result?.data!==null && result?.data[key]){
+    if (result && result?.data !== null && result?.data[key]) {
       //console.log(key,'===>',result?.data[key]);
-      return({
+      return {
         details: result.details,
-        data: {...result.data[key]}
-      });
+        data: { ...result.data[key] },
+      };
     }
   }
   return null;
-}
+};
 
-export const getSearchByTypeAndID = async (key:string,id:string,elecID:number) => {
+export const getSearchByTypeAndID = async (
+  key: string,
+  id: string,
+  elecID: number,
+) => {
   key = key.toUpperCase();
-  if(key.match(/^(G|P|R|Q|S|D|V|C|E|I|N|U|L)$/)!==null){
+  if (key.match(/^(G|P|R|Q|S|D|V|C|E|I|N|U|L)$/) !== null) {
     let result = await getSearchByTypeSchema(elecID);
-    if(await result!==null && result?.data!==null){
-      return {details:result?.details,data: result?.data[key][id]}
+    if ((await result) !== null && result?.data !== null) {
+      return { details: result?.details, data: result?.data[key][id] };
     }
   }
   return null;
-}
+};
