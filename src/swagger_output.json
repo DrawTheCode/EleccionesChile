@@ -1,0 +1,371 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "REST API",
+    "description": ""
+  },
+  "host": "charlyapi2.prima.localhost",
+  "basePath": "/api",
+  "schemes": ["http"],
+  "paths": {
+    "/def/zones": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "referer",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/def/elec": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "referer",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/def/ambit": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "referer",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/check/files": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "referer",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/check/not-copy": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "referer",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/check/scenery/{zone}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "zone",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "referer",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/check/data/{zone}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "zone",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "referer",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/check/data/{zone}/filter/{type}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "zone",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "referer",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/results/{elecID}/all": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "elecID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "referer",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/results/{elecID}/filter/{key}/{value}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "elecID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "value",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "referer",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/results/{elecID}/filter/{firstKey}/{firstValue}/{secondKey}/{secondValue}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "elecID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "firstKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "firstValue",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "secondKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "secondValue",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "referer",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/search/{elecID}/by/{complexId}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "elecID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "complexId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "referer",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/search/{elecID}/by/type/{typeZone}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "elecID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "typeZone",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "referer",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/search/{elecID}/by/type/{typeZone}/{idZone}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "elecID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "typeZone",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "idZone",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "referer",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

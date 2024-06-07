@@ -10,7 +10,8 @@
     "cron-dev": "ts-node-dev src/subscribers/checkFTP.ts",
     "tsc": "tsc",
     "nohup": "nohup node build/index.js 0</dev/null 1>/dev/null 2>/dev/null &",
-    "cron": "node /build/subscribers/checkFTP.js"
+    "cron": "node /build/subscribers/checkFTP.js",
+    "swagger-autogen": "node src/swagger.ts"
   },
   "author": "DrawTheCode",
   "license": "ISC",
