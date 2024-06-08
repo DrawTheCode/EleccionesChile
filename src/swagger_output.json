@@ -5,7 +5,7 @@
     "title": "REST API",
     "description": "API for managing election data in Chile. It includes endpoints for fetching static definitions, checking file statuses, retrieving data, and searching results."
   },
-  "host": "apiserver.latercera.com",
+  "host": "apiservel.latercera.com",
   "basePath": "/api",
   "schemes": ["https"],
   "paths": {
