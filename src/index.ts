@@ -21,4 +21,8 @@ electionReader.use('/api/check/', listing);
 electionReader.use('/api/result/', results);
 electionReader.use('/api/search/', search);
 
-electionReader.use('/docs/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+electionReader.use(
+  '/api/docs/',
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocument),
+);
