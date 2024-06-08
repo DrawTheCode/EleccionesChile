@@ -5,9 +5,9 @@
     "title": "REST API",
     "description": "API for managing election data in Chile. It includes endpoints for fetching static definitions, checking file statuses, retrieving data, and searching results."
   },
-  "host": "charlyapi2.prima.localhost",
+  "host": "apiserver.latercera.com",
   "basePath": "/api",
-  "schemes": ["http"],
+  "schemes": ["https"],
   "paths": {
     "/def/zones": {
       "get": {
