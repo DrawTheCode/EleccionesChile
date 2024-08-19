@@ -1,0 +1,2 @@
+1;Elección Gobernadores Regionales;09/06/2024;R;H;747311;
+2;Elección Alcaldes;09/06/2024;C;A;4356906;
