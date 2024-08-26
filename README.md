@@ -5,7 +5,7 @@
 ----
 Requerimientos:
 
-- Versión Node: 18.16
+- Versión Node: 20
 - Versión NPM: 9.7.1
 
 ## Comandos npm run
@@ -113,9 +113,6 @@ corresponde al campo por el cual se quiere filtrar y el *:value* al valor de dic
 
 ----
 Trae los datos filtrando por dos valores y sus nombres ingresados en la URL, el valor *:firstKey y :secondKey* corresponde al campo por el cual se quiere filtrar y el *:firstValue y :secondValue* al valor de dichos campos.
-
->[!WARNING]
->Los siguientes endpoints **no están terminados** y corresponden a pruebas en desarrollo, y por los mismo los resultados aún están en evaluación.
 
 ### Search´s
 
