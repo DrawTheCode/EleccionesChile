@@ -8,6 +8,9 @@ Requerimientos:
 - Versión Node: 20
 - Versión NPM: 9.7.1
 
+>[!NOTE]
+> Se añade archivo de configuración de PM2 (ecosystem.config.js) con la idea de facilitar la inconrporacion futura de dicha herramienta, igualmente dicho archivo no es necesario para uso local.
+
 ## Comandos npm run
 
     "start": Hace correr el proyecto (necesita archivo .env).

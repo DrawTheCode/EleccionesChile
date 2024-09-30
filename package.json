@@ -1,6 +1,6 @@
 {
   "name": "plebiscito2023",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Proyecto de lectura de archivos para votaciones en chile.",
   "main": "index.js",
   "scripts": {
